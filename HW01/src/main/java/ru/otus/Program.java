@@ -1,3 +1,5 @@
+package ru.otus;
+
 import org.apache.commons.collections.map.MultiValueMap;
 
 import java.util.HashMap;

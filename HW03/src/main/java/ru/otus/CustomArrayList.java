@@ -97,7 +97,7 @@ public class CustomArrayList<T> implements List<T> {
     public ListIterator<T> listIterator() {
         return new ListIterator<T>() {
 
-            int cursorPosition = -1;       // index of next element to return
+            int cursorPosition = -1;
 
             @Override
             public T next() {

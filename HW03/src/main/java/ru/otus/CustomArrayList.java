@@ -13,101 +13,47 @@ public class CustomArrayList<T> implements List<T> {
 
     public CustomArrayList(int capacity) {
         elements = new Object[capacity];
-       for(int i = 0; i < capacity; i++){
-           elements[i] = new Object();
-       }
+        for (int i = 0; i < capacity; i++) {
+            elements[i] = new Object();
+        }
     }
 
-//////////////////////////////////////    Из интерфейса List
-
-    public boolean isEmpty() {
-        return false;
-    }
-
-    public boolean contains(Object o) {
-        return false;
-    }
-
-    public Iterator<T> iterator() {
-        return null;
-    }
-
-    public Object[] toArray() {
-        return new Object[0];
-    }
-
-    public <T1> T1[] toArray(T1[] a) {
-        return null;
-    }
-
-
-    public boolean remove(Object o) {
-        return false;
-    }
-
-    public boolean containsAll(Collection<?> c) {
-        return false;
-    }
-
-
-
-    public boolean addAll(int index, Collection<? extends T> c) {
-        return false;
-    }
-
-    public boolean removeAll(Collection<?> c) {
-        return false;
-    }
-
-    public boolean retainAll(Collection<?> c) {
-        return false;
-    }
-
-    public void clear() {
-
-    }
-
-
-    public T set(int index, T element) {
-        return null;
-    }
-
-    public void add(int index, T element) {
-
-    }
-
-    public int indexOf(Object o) {
-        return 0;
-    }
-
-    public int lastIndexOf(Object o) {
-        return 0;
-    }
-
-    public ListIterator<T> listIterator() {
-        return null;
-    }
-
-    public ListIterator<T> listIterator(int index) {
-        return null;
-    }
-
-    public List<T> subList(int fromIndex, int toIndex) {
-        return null;
-    }
-//////////////////////////////////////
-
+    @Override
     public int size() {
         return elements.length;
     }
 
+    public int getElementCount() {
+        return firstEmptyElementIndex;
+    }
+
+    @Override
     public T get(int index) {
-        if(index >= elements.length){
+        if (index >= elements.length) {
             checkIndexAvailable(index);
         }
         return (T) elements[index];
 
     }
+
+    @Override
+    public T set(int index, T element) {
+        if (element.getClass() != Object.class) {
+            if (index == firstEmptyElementIndex) {
+                add(element);
+                return null;
+            } else {
+                checkIndexAvailable(index);
+                T oldElement = get(index);
+                System.arraycopy(elements, index, elements, index + 1, firstEmptyElementIndex - index);
+                update(index, element);
+                return oldElement;
+            }
+        } else {
+            return null;
+        }
+    }
+
 
     private void checkIndexAvailable(int index) {
         if (index >= firstEmptyElementIndex) {
@@ -115,6 +61,7 @@ public class CustomArrayList<T> implements List<T> {
         }
     }
 
+    @Override
     public boolean add(T t) {
         elements[firstEmptyElementIndex] = t;
         firstEmptyElementIndex++;
@@ -124,22 +71,85 @@ public class CustomArrayList<T> implements List<T> {
         return true;
     }
 
+    @Override
     public boolean addAll(Collection<? extends T> c) {
         c.forEach(this::add);
         return false;
     }
 
-//    public void add(int element) {
-//        elements[firstEmptyElementIndex] = element;
-//        if (++firstEmptyElementIndex == elements.length) {
-//            expandList();
-//        }
-//    }
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder("");
+        for (int i = 0; i < getElementCount(); i++) {
+            s.append(elements[i].toString()).append(" ");
+        }
+        return s.toString();
+    }
+
+    @Override
+    public Object[] toArray() {
+        Object[] a = new Object[getElementCount()];
+        System.arraycopy(elements, 0, a, 0, getElementCount());
+        return a;
+    }
+
+    @Override
+    public ListIterator<T> listIterator() {
+        return new ListIterator<T>() {
+
+            int cursorPosition = -1;       // index of next element to return
+
+            @Override
+            public T next() {
+                cursorPosition++;
+                return (T) elements[cursorPosition];
+            }
+
+            @Override
+            public T previous() {
+                cursorPosition--;
+                return (T) elements[cursorPosition];
+            }
+
+            @Override
+            public boolean hasNext() {
+                return cursorPosition + 1 != firstEmptyElementIndex;
+            }
+
+            @Override
+            public boolean hasPrevious() {
+                return cursorPosition > 0;
+            }
+
+            @Override
+            public int nextIndex() {
+                return cursorPosition + 1;
+            }
+
+            @Override
+            public int previousIndex() {
+                return cursorPosition - 1;
+            }
+
+            @Override
+            public void remove() {
+            }
+
+            @Override
+            public void add(T t) {
+            }
+
+            @Override
+            public void set(T t) {
+                CustomArrayList.this.set(cursorPosition, t);
+            }
+        };
+    }
 
     private void expandList() {
         int newSize = (int) (elements.length * 1.5);
         Object[] newList = new Object[newSize];
-        for(int i = elements.length; i < newSize; i++){
+        for (int i = elements.length; i < newSize; i++) {
             newList[i] = new Object();
         }
         System.arraycopy(elements, 0, newList, 0, elements.length);
@@ -151,6 +161,7 @@ public class CustomArrayList<T> implements List<T> {
         elements[index] = element;
     }
 
+    @Override
     public T remove(int index) {
         checkIndexAvailable(index);
         T removedElement = get(index);
@@ -159,38 +170,78 @@ public class CustomArrayList<T> implements List<T> {
         return removedElement;
     }
 
-
-//    public void delete(int index) {
-//        checkIndexAvailable(index);
-//        System.arraycopy(elements, index + 1, elements, index, firstEmptyElementIndex - index);
-//        firstEmptyElementIndex--;
-//    }
-
-
-    public void insert(int index, T element) {
-        if (index == firstEmptyElementIndex) {
-            add(element);
-        } else {
-            checkIndexAvailable(index);
-            System.arraycopy(elements, index, elements, index + 1, firstEmptyElementIndex - index);
-            update(index, element);
-        }
+    @Override
+    public boolean isEmpty() {
+        return false;
     }
 
+    @Override
+    public boolean contains(Object o) {
+        return false;
+    }
 
-}
-class Program1{
-    public static void main(String[] args) {
-        CustomArrayList<Integer> intCustomList1 = new CustomArrayList<>(5);
-        CustomArrayList<Integer> intCustomList2 = new CustomArrayList<>(10);
+    @Override
+    public Iterator<T> iterator() {
+        return null;
+    }
 
-        Collections.addAll(intCustomList1, 15, 123, 0, 42, 78934);
-//        Collections.copy(intCustomList2, intCustomList1);
-        Collections.sort(intCustomList2);
+    @Override
+    public <T1> T1[] toArray(T1[] a) {
+        return null;
+    }
 
-        System.out.println(intCustomList2);
+    @Override
+    public boolean remove(Object o) {
+        return false;
+    }
 
+    @Override
+    public boolean containsAll(Collection<?> c) {
+        return false;
+    }
 
+    @Override
+    public boolean addAll(int index, Collection<? extends T> c) {
+        return false;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        return false;
+    }
+
+    @Override
+    public boolean retainAll(Collection<?> c) {
+        return false;
+    }
+
+    @Override
+    public void clear() {
 
     }
+
+    @Override
+    public void add(int index, T element) {
+    }
+
+    @Override
+    public int indexOf(Object o) {
+        return 0;
+    }
+
+    @Override
+    public int lastIndexOf(Object o) {
+        return 0;
+    }
+
+    @Override
+    public ListIterator<T> listIterator(int index) {
+        return null;
+    }
+
+    @Override
+    public List<T> subList(int fromIndex, int toIndex) {
+        return null;
+    }
+
 }

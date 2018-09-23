@@ -6,51 +6,39 @@ public class CustomArrayList<T> implements List<T> {
 
     private Object[] elements;
     private int firstEmptyElementIndex = 0;
+    private String unsupportedOperationMessage = "This operation is not supported.";
 
     public CustomArrayList() {
-        new CustomArrayList(100);
+        this(100);
     }
 
     public CustomArrayList(int capacity) {
         elements = new Object[capacity];
-        for (int i = 0; i < capacity; i++) {
-            elements[i] = new Object();
-        }
     }
 
     @Override
     public int size() {
-        return elements.length;
-    }
-
-    public int getElementCount() {
         return firstEmptyElementIndex;
     }
 
+
     @Override
     public T get(int index) {
-        if (index >= elements.length) {
-            checkIndexAvailable(index);
-        }
+        checkIndexAvailable(index);
         return (T) elements[index];
 
     }
 
     @Override
     public T set(int index, T element) {
-        if (element.getClass() != Object.class) {
-            if (index == firstEmptyElementIndex) {
-                add(element);
-                return null;
-            } else {
-                checkIndexAvailable(index);
-                T oldElement = get(index);
-                System.arraycopy(elements, index, elements, index + 1, firstEmptyElementIndex - index);
-                update(index, element);
-                return oldElement;
-            }
-        } else {
+        if (index == firstEmptyElementIndex) {
+            add(element);
             return null;
+        } else {
+            checkIndexAvailable(index);
+            T oldElement = get(index);
+            update(index, element);
+            return oldElement;
         }
     }
 
@@ -63,11 +51,11 @@ public class CustomArrayList<T> implements List<T> {
 
     @Override
     public boolean add(T t) {
-        elements[firstEmptyElementIndex] = t;
-        firstEmptyElementIndex++;
-        if (firstEmptyElementIndex == elements.length) {
+        if (firstEmptyElementIndex == size() - 1) {
             expandList();
         }
+        elements[firstEmptyElementIndex] = t;
+        firstEmptyElementIndex++;
         return true;
     }
 
@@ -80,7 +68,7 @@ public class CustomArrayList<T> implements List<T> {
     @Override
     public String toString() {
         StringBuilder s = new StringBuilder("");
-        for (int i = 0; i < getElementCount(); i++) {
+        for (int i = 0; i < size(); i++) {
             s.append(elements[i].toString()).append(" ");
         }
         return s.toString();
@@ -88,8 +76,8 @@ public class CustomArrayList<T> implements List<T> {
 
     @Override
     public Object[] toArray() {
-        Object[] a = new Object[getElementCount()];
-        System.arraycopy(elements, 0, a, 0, getElementCount());
+        Object[] a = new Object[size()];
+        System.arraycopy(elements, 0, a, 0, size());
         return a;
     }
 
@@ -133,10 +121,12 @@ public class CustomArrayList<T> implements List<T> {
 
             @Override
             public void remove() {
+                throw new UnsupportedOperationException(unsupportedOperationMessage);
             }
 
             @Override
             public void add(T t) {
+                throw new UnsupportedOperationException(unsupportedOperationMessage);
             }
 
             @Override
@@ -149,9 +139,6 @@ public class CustomArrayList<T> implements List<T> {
     private void expandList() {
         int newSize = (int) (elements.length * 1.5);
         Object[] newList = new Object[newSize];
-        for (int i = elements.length; i < newSize; i++) {
-            newList[i] = new Object();
-        }
         System.arraycopy(elements, 0, newList, 0, elements.length);
         elements = newList;
     }
@@ -172,76 +159,77 @@ public class CustomArrayList<T> implements List<T> {
 
     @Override
     public boolean isEmpty() {
-        return false;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public boolean contains(Object o) {
-        return false;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public Iterator<T> iterator() {
-        return null;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public <T1> T1[] toArray(T1[] a) {
-        return null;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public boolean remove(Object o) {
-        return false;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public boolean containsAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public boolean addAll(int index, Collection<? extends T> c) {
-        return false;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public boolean removeAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public boolean retainAll(Collection<?> c) {
-        return false;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public void clear() {
-
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public void add(int index, T element) {
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public int indexOf(Object o) {
-        return 0;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public int lastIndexOf(Object o) {
-        return 0;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public ListIterator<T> listIterator(int index) {
-        return null;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
     @Override
     public List<T> subList(int fromIndex, int toIndex) {
-        return null;
+        throw new UnsupportedOperationException(unsupportedOperationMessage);
     }
 
 }

@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 
 public class TestAnnotationAnalyzer {
     public static void test(Class<?> clazz){
-        Method[] methods = clazz.getClass().getDeclaredMethods();
+        Method[] methods = clazz.getDeclaredMethods();
         int passed = 0;
         int failed = 0;
 

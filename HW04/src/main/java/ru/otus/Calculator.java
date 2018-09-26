@@ -1,10 +1,6 @@
-package ru.otus.tests;
-
-import ru.otus.Test;
+package ru.otus;
 
 public class Calculator {
-
-
     public static long sum (int x, int y){
         return x + y;
     }
@@ -14,8 +10,11 @@ public class Calculator {
         return x - y;
     }
 
-    @Test
-    public static void testSum(){
-        System.out.println("OK");
-   }
+    public static long multiply(int x, int y){
+        return x * y;
+    }
+
+    public static int divide(int x, int y){
+        return x / y;
+    }
 }

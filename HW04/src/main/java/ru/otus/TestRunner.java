@@ -1,8 +1,8 @@
 package ru.otus;
 
 import java.io.File;
-import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
@@ -64,17 +64,17 @@ public class TestRunner {
 
     public static void runTestsFromPackage(String packageName) throws ClassNotFoundException {
         Class<?> clazz;
-        Package p = ClassLoader.getSystemClassLoader().getDefinedPackage("ru.otus.tests");
-        int x = 1;
-//        File[] files = Paths
-//                .get(ClassLoader.getSystemClassLoader().getDefinedPackage() + packageName.replace(".", "\\"))
-//                .toFile()
-//                .listFiles();
-//        if (files != null) {
-//            for (File file : files) {
-//                clazz = Class.forName(packageName + "." + file.getName().replace(".java", ""));
-//                TestRunner.runTestsFromClass(clazz);
-//            }
-//        }
+        Path pathToPackage = Paths.get("").toAbsolutePath().getParent()
+                .resolve("HW04/src/main/java")
+                .resolve(packageName.replace(".", "\\"));
+        File[] files = Paths.get(pathToPackage.toString())
+                .toFile()
+                .listFiles();
+        if (files != null) {
+            for (File file : files) {
+                clazz = Class.forName(packageName + "." + file.getName().replace(".java", ""));
+                TestRunner.runTestsFromClass(clazz);
+            }
+        }
     }
 }

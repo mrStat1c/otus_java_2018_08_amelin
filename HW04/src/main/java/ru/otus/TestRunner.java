@@ -1,6 +1,9 @@
 package ru.otus;
 
+import ru.otus.tests.CalculatorTest;
+
 import java.io.File;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -9,7 +12,8 @@ import java.util.List;
 
 public class TestRunner {
 
-    public static void runTestsFromClass(Class<?> clazz) {
+    public static void runTestsFromClass(Class<?> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        CalculatorTest ct = (CalculatorTest) clazz.getDeclaredConstructor().newInstance();
         Method[] methods = clazz.getMethods();
         int passed = 0;
         int failed = 0;
@@ -32,27 +36,37 @@ public class TestRunner {
         }
 
         if (!testMethods.isEmpty()) {
-            if (beforeMethod != null) {
-                try {
-                    beforeMethod.invoke(null);
-                } catch (Exception e) {
-                    System.out.println("Before method failed. " + e.getCause().getMessage());
-                }
-            }
             for (Method method : testMethods) {
+                if (beforeMethod != null) {
+                    try {
+                        beforeMethod.invoke(ct);
+                    } catch (Exception e) {
+                        System.out.println(e.getCause().getMessage());
+                        failed++;
+                        try {
+                            if (afterMethod != null) {
+                                afterMethod.invoke(ct);
+                            }
+                            continue;
+                        } catch (Exception e1) {
+                            System.out.println(e1.getCause().getMessage());
+                            continue;
+                        }
+                    }
+                }
                 try {
-                    method.invoke(null);
+                    method.invoke(ct);
                     passed++;
                 } catch (Exception e) {
                     System.out.println(e.getCause().getMessage());
                     failed++;
                 }
-            }
-            if (afterMethod != null) {
-                try {
-                    afterMethod.invoke(null);
-                } catch (Exception e) {
-                    System.out.println("After method failed. " + e.getCause().getMessage());
+                if (afterMethod != null) {
+                    try {
+                        afterMethod.invoke(ct);
+                    } catch (Exception e) {
+                        System.out.println(e.getCause().getMessage());
+                    }
                 }
             }
         }
@@ -62,7 +76,7 @@ public class TestRunner {
     }
 
 
-    public static void runTestsFromPackage(String packageName) throws ClassNotFoundException {
+    public static void runTestsFromPackage(String packageName) throws ClassNotFoundException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         Class<?> clazz;
         Path pathToPackage = Paths.get("").toAbsolutePath().getParent()
                 .resolve("HW04/src/main/java")

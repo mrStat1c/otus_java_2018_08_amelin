@@ -10,32 +10,32 @@ import static org.hamcrest.MatcherAssert.assertThat;
 public class CalculatorTest {
 
     @Before
-    public static void before(){
-        System.out.println("Testing started.");
+    public void before() {
+        System.out.println("Test started.");
     }
 
     @After
-    public static void after(){
-        System.out.println("Testing finished.");
+    public void after() {
+        System.out.println("Test finished.");
     }
 
     @Test
-    public static void testSum(){
-        assertThat("Test of function \"testSum\" failed!", Calculator.sum(12, 35) == 47 );
+    public void testSum() {
+        assertThat("Test of function \"testSum\" failed!", Calculator.sum(12, 35) == 47);
     }
 
     @Test
-    public static void testMinus(){
-        assertThat("Test of function \"testMinus\" failed!", Calculator.minus(40, 20) == 30 );
+    public void testMinus() {
+        assertThat("Test of function \"testMinus\" failed!", Calculator.minus(40, 20) == 30);
     }
 
     @Test
-    public static void testMultiply(){
+    public void testMultiply() {
         assertThat("Test of function \"testMultiply\" failed!", Calculator.multiply(5, 5) == 25);
     }
 
     @Test
-    public static void testDivide(){
-        assertThat("Test of function \"testDivide\" failed!", Calculator.divide(15, 3) == 5 );
+    public void testDivide() {
+        assertThat("Test of function \"testDivide\" failed!", Calculator.divide(15, 3) == 5);
     }
 }

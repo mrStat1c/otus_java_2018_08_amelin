@@ -13,7 +13,7 @@ import java.util.List;
 public class TestRunner {
 
     public static void runTestsFromClass(Class<?> clazz) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        CalculatorTest ct = (CalculatorTest) clazz.getDeclaredConstructor().newInstance();
+        CalculatorTest ct;
         Method[] methods = clazz.getMethods();
         int passed = 0;
         int failed = 0;
@@ -37,6 +37,7 @@ public class TestRunner {
 
         if (!testMethods.isEmpty()) {
             for (Method method : testMethods) {
+                ct  = (CalculatorTest) clazz.getDeclaredConstructor().newInstance();
                 if (beforeMethod != null) {
                     try {
                         beforeMethod.invoke(ct);

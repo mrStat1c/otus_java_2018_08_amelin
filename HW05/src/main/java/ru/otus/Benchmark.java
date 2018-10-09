@@ -2,6 +2,7 @@ package ru.otus;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
 
 public class Benchmark implements BenchmarkMBean {
 
@@ -13,13 +14,18 @@ public class Benchmark implements BenchmarkMBean {
 
     void start() throws InterruptedException {
         List<String> stringList = new ArrayList<String>();
-
-        while (true) {
-            for (int i = 0; i < size; i++) {
-                stringList.add(String.valueOf(i));
+        Timer timer = new Timer();
+        timer.schedule(new GcPrintMetricTimer(), 0, 60 * 1000);
+        try {
+            while (true) {
+                for (int i = 0; i < size; i++) {
+                    stringList.add(String.valueOf(i));
+                }
+                Thread.sleep(500);
             }
-            Thread.sleep(500);
-            GC.printGCMetricks();
+        } catch (RuntimeException e) {
+            return;
         }
     }
 }
+

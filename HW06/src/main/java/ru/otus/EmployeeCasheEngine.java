@@ -1,37 +1,38 @@
 package ru.otus;
 
+import java.lang.ref.SoftReference;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Function;
 
-public class AmployeeCasheEngine {
+public class EmployeeCasheEngine {
 
     private static final int TIME_THRESHOLD_MS = 5;
 
     private final int maxElements;
     private final long idleTimeMs;
 
-    private final Map<Integer, Amployee> amployees = new LinkedHashMap<>();
+    private final Map<Integer, SoftReference<Employee>> employees = new LinkedHashMap<>();
     private final Timer timer = new Timer();
 
     private int hit = 0;
     private int miss = 0;
 
-    AmployeeCasheEngine(int maxElements, long idleTimeMs) {
+    EmployeeCasheEngine(int maxElements, long idleTimeMs) {
         this.maxElements = maxElements;
         this.idleTimeMs = idleTimeMs > 0 ? idleTimeMs : 0;
     }
 
-    public void put(Amployee element) {
-        if (amployees.size() == maxElements) {
-            int firstKey = amployees.keySet().iterator().next();
-            amployees.remove(firstKey);
+    public void put(Employee element) {
+        if (employees.size() == maxElements) {
+            int firstKey = employees.keySet().iterator().next();
+            employees.remove(firstKey);
         }
 
         int key = element.getId();
-        amployees.put(key, element);
+        employees.put(key, new SoftReference<>(element));
 
         if (idleTimeMs != 0) {
             TimerTask idleTimerTask = getTimerTask(key, idleElement -> idleElement.getLastAccessTime() + idleTimeMs);
@@ -39,8 +40,8 @@ public class AmployeeCasheEngine {
         }
     }
 
-    public Amployee get(int key) {
-        Amployee element = amployees.get(key);
+    public Employee get(int key) {
+        Employee element = employees.get(key) == null ? null: employees.get(key).get();
         if (element != null) {
             hit++;
             element.setAccessed();
@@ -62,13 +63,13 @@ public class AmployeeCasheEngine {
         timer.cancel();
     }
 
-    private TimerTask getTimerTask(final int key, Function<Amployee, Long> timeFunction) {
+    private TimerTask getTimerTask(final int key, Function<Employee, Long> timeFunction) {
         return new TimerTask() {
             @Override
             public void run() {
-                Amployee element = amployees.get(key);
+                Employee element = employees.get(key).get();
                 if (element == null || isT1BeforeT2(timeFunction.apply(element), System.currentTimeMillis())) {
-                    amployees.remove(key);
+                    employees.remove(key);
                     this.cancel();
                 }
             }

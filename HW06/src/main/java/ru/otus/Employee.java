@@ -1,8 +1,6 @@
 package ru.otus;
 
-import java.util.Map;
-
-public class Amployee {
+public class Employee {
 
   private int id;
   private String fio;
@@ -10,9 +8,9 @@ public class Amployee {
   private long lastAccessTime;
 
 
-    public Amployee(int key, String value) {
+    public Employee(int key, String fio) {
         this.id = key;
-        this.fio = value;
+        this.fio = fio;
         this.creationTime = getCurrentTime();
         this.lastAccessTime = getCurrentTime();
     }
@@ -29,9 +27,6 @@ public class Amployee {
         return fio;
     }
 
-    public long getCreationTime() {
-        return creationTime;
-    }
 
     public long getLastAccessTime() {
         return lastAccessTime;

@@ -2,5 +2,5 @@ package ru.otus;
 
 public interface AtmObserver {
 
-    void resetState();
+    void resetState(AtmSnapshot atmSnapshot);
 }

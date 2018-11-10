@@ -18,11 +18,14 @@ public class AtmDepartment {
         return atms.get(atmName);
     }
 
+    public void createAtmSnapshots(){
+        atms.forEach((name, atm) -> AtmSnapshotHolder.setAtmSnapshot(name, atm.getSnapshot()));
+    }
 
-    public void notifyAtms() {
+    public void resetAtms() {
         atms.forEach((name, atm) -> {
             System.out.println("ATM " + name + " reset");
-            atm.resetState();
+            atm.resetState(AtmSnapshotHolder.getAtmSnapshot(name));
         });
     }
 

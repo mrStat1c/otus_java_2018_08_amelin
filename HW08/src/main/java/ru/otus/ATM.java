@@ -6,19 +6,33 @@ public class ATM implements AtmObserver{
 
     private int balance = 0;
     private Map<Integer, Integer> notes = new HashMap<>();
-    private boolean isInitialActive;
     private boolean isActive;
+    private String description;
 
-    protected void setState(boolean active) {
-        this.isActive = active;
-    }
-
-    public ATM(boolean initialActivity) {
+    public ATM(boolean initialActivity, String description) {
         for (MoneyNote note : MoneyNote.values()) {
             notes.put(note.getValue(), 0);
         }
-        this.isInitialActive = initialActivity;
         this.isActive = initialActivity;
+        this.description = description;
+        getSnapshot();
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive){
+        this.isActive = isActive;
+    }
+
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public void receiveMoney(List<MoneyNote> moneyNotes) {
@@ -94,11 +108,14 @@ public class ATM implements AtmObserver{
 
 
     @Override
-    public void resetState() {
-        this.isActive = isInitialActive;
+    public void resetState(AtmSnapshot atmSnapshot) {
+        setActive(atmSnapshot.isActive());
+        setDescription(atmSnapshot.getDescription());
     }
 
-    public boolean isActive() {
-        return isActive;
+
+    public AtmSnapshot getSnapshot(){
+        return new AtmSnapshot(this.isActive, this.description);
     }
+
 }

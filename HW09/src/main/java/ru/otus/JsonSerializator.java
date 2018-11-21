@@ -3,22 +3,18 @@ package ru.otus;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-import javax.json.Json;
-import javax.json.JsonBuilderFactory;
-import javax.json.JsonObject;
-import javax.json.JsonValue;
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.Type;
-import java.util.Arrays;
-import java.util.Map;
+import java.lang.reflect.ParameterizedType;
+import java.util.*;
 
 public class JsonSerializator {
 
-    public static String convertToJsonString(Object object) throws IllegalAccessException, InstantiationException {
-//        JsonObject jsonObject = Json.createObjectBuilder().build();
-        JSONObject jsonObject = new JSONObject();
+    public static String getJsonString(Object object) throws IllegalAccessException, ClassNotFoundException, InstantiationException {
+        return convertToJsonObject(object).toString();
+    }
 
+    private static JSONObject convertToJsonObject(Object object) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
+        JSONObject jsonObject = new JSONObject();
         for (Field field : object.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             if (isString(object, field)) {
@@ -41,22 +37,83 @@ public class JsonSerializator {
                 jsonObject.put(field.getName(), field.getChar(object));
             } else if (isArray(object, field)) {
                 Class clazz = field.getType().getComponentType();
+                JSONArray jsonArray = new JSONArray();
+                Object[] objects;
                 if (isPrimitive(clazz)) {
-                    JSONArray jsonArray = new JSONArray();
-                    Object[] x;
                     if (clazz.newInstance() instanceof Number) {
-                        x = (Number[]) field.get(object);
+                        objects = (Number[]) field.get(object);
                     } else if (clazz.newInstance() instanceof Boolean) {
-                        x = (Boolean[]) field.get(object);
+                        objects = (Boolean[]) field.get(object);
                     } else {
-                        x = (String[]) field.get(object);
+                        objects = (String[]) field.get(object);
                     }
-                    jsonArray.addAll(Arrays.asList(x));
-                    jsonObject.put(field.getName(), jsonArray);
+                } else {
+                    objects = (Object[]) field.get(object);
+                    for(int j = 0; j < objects.length; j++){
+                        objects[j] = convertToJsonObject(objects[j]);
+                    }
                 }
+                jsonArray.addAll(Arrays.asList(objects));
+                jsonObject.put(field.getName(), jsonArray);
+            } else if (isList(object, field)){
+                String parameterTypeName =  ((ParameterizedType)field.getGenericType())
+                        .getActualTypeArguments()[0]
+                        .getTypeName();
+                Class clazz = Class.forName(parameterTypeName);
+                JSONArray jsonArray = new JSONArray();
+                Object[] objects = ((List<?>) field.get(object)).toArray();
+                if (!isPrimitive(clazz)) {
+                    for(int j = 0; j < objects.length; j++){
+                        objects[j] = convertToJsonObject(objects[j]);
+                    }
+                }
+                jsonArray.addAll(Arrays.asList(objects));
+                jsonObject.put(field.getName(), jsonArray);
+            } else if (isSet(object, field)){
+                String parameterTypeName =  ((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0].getTypeName();
+                Class clazz = Class.forName(parameterTypeName);
+                JSONArray jsonArray = new JSONArray();
+                Object[] x = ((Set<?>) field.get(object)).toArray();
+                if (!isPrimitive(clazz)) {
+                    for(int j = 0; j < x.length; j++){
+                        x[j] = convertToJsonObject(x[j]);
+                    }
+                }
+                jsonArray.addAll(Arrays.asList(x));
+                jsonObject.put(field.getName(), jsonArray);
+            } else if(isMap(object, field)){
+                Map<?,?> map = (Map<?,?>) field.get(object);
+                Set<? extends Map.Entry<?, ?>> entries = map.entrySet();
+                List<Object> keys = new ArrayList<>();
+                List<Object> values = new ArrayList<>();
+                entries.forEach(entry -> {
+                    keys.add(entry.getKey());
+                    values.add(entry.getValue());
+                });
+                Class keyClazz = keys.get(0).getClass();
+                Class valueClazz = values.get(0).getClass();
+                Object[] keyArray = keys.toArray();
+                Object[] valueArray = values.toArray();
+                JSONArray jsonArray = new JSONArray();
+                if (!isPrimitive(keyClazz)) {
+                    for(int j = 0; j < keyArray.length; j++){
+                        keyArray[j] = convertToJsonObject(keyArray[j]);
+                    }
+                }
+                if (!isPrimitive(valueClazz)) {
+                    for(int j = 0; j < valueArray.length; j++){
+                        valueArray[j] = convertToJsonObject(valueArray[j]);
+                    }
+                }
+                for(int j = 0; j < keyArray.length; j++){
+                    JSONObject localJson = new JSONObject();
+                    localJson.put(keyArray[j], valueArray[j]);
+                    jsonArray.add(localJson);
+                }
+                jsonObject.put(field.getName(), jsonArray);
             }
         }
-        return jsonObject.toString();
+        return jsonObject;
     }
 
 
@@ -100,8 +157,25 @@ public class JsonSerializator {
         return field.get(object).getClass().isArray();
     }
 
-    private static boolean isPrimitive(Class clazz) throws IllegalAccessException, InstantiationException {
-        Object obj = clazz.newInstance();
+    private static boolean isPrimitive(Class clazz) {
+        Object obj;
+        try {
+            obj = clazz.newInstance();
+        } catch (InstantiationException | IllegalAccessException e) {
+            return false;
+        }
         return obj instanceof String || obj instanceof Number || obj instanceof Boolean;
+    }
+
+    private static boolean isList(Object object, Field field) throws IllegalAccessException {
+        return field.get(object) instanceof List;
+    }
+
+    private static boolean isSet(Object object, Field field) throws IllegalAccessException {
+        return field.get(object) instanceof Set;
+    }
+
+    private static boolean isMap(Object object, Field field) throws IllegalAccessException {
+        return field.get(object) instanceof Map;
     }
 }

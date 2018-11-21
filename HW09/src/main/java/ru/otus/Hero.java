@@ -1,6 +1,7 @@
 package ru.otus;
 
 import java.util.List;
+import java.util.Map;
 
 public class Hero {
 
@@ -11,8 +12,17 @@ public class Hero {
     private long gold;
     private String[] features;
     private List<Weapon> weapons;
+    private Map<String, String> notes;
 
-    public Hero(String specialization, byte level, int hp, int mana, long gold, String[] features, List<Weapon> weapons){
+    public Hero(
+            String specialization,
+            byte level,
+            int hp,
+            int mana,
+            long gold,
+            String[] features,
+            List<Weapon> weapons,
+            Map<String, String> notes){
         this.specialization = specialization;
         this.level = level;
         this.hp = hp;
@@ -20,6 +30,7 @@ public class Hero {
         this.gold = gold;
         this.features = features;
         this.weapons = weapons;
+        this.notes = notes;
     }
 
 }

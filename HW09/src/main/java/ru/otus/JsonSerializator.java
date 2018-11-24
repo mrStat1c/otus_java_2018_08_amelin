@@ -16,151 +16,138 @@ public class JsonSerializator {
     private static JSONObject convertToJsonObject(Object object) throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         JSONObject jsonObject = new JSONObject();
         if (object != null) {
-            for (Field field : object.getClass().getDeclaredFields()) {
-                field.setAccessible(true);
-                if (isNull(object, field)) {
-                    jsonObject.put(field.getName(), null);
-                } else if (isString(object, field)) {
-                    jsonObject.put(field.getName(), field.get(object));
-                } else if (isInt(object, field)) {
-                    jsonObject.put(field.getName(), field.getInt(object));
-                } else if (isBoolean(object, field)) {
-                    jsonObject.put(field.getName(), field.getBoolean(object));
-                } else if (isDouble(object, field)) {
-                    jsonObject.put(field.getName(), field.getDouble(object));
-                } else if (isByte(object, field)) {
-                    jsonObject.put(field.getName(), field.getByte(object));
-                } else if (isLong(object, field)) {
-                    jsonObject.put(field.getName(), field.getLong(object));
-                } else if (isShort(object, field)) {
-                    jsonObject.put(field.getName(), field.getShort(object));
-                } else if (isFloat(object, field)) {
-                    jsonObject.put(field.getName(), field.getFloat(object));
-                } else if (isChar(object, field)) {
-                    jsonObject.put(field.getName(), field.getChar(object));
-                } else if (isArray(object, field)) {
-                    Class clazz = field.getType().getComponentType();
-                    JSONArray jsonArray = new JSONArray();
-                    Object[] objects;
-                    if (clazz.isPrimitive()) {
-                        if (clazz.equals(int.class)) {
-                            int[] intArray = (int[]) field.get(object);
-                            for (int i = 0; i < intArray.length; i++) {
-                                jsonArray.add(intArray[i]);
-                            }
-                        } else if (clazz.equals(byte.class)) {
-                            byte[] intArray = (byte[]) field.get(object);
-                            for (int i = 0; i < intArray.length; i++) {
-                                jsonArray.add(intArray[i]);
-                            }
-                        } else if (clazz.equals(short.class)) {
-                            short[] intArray = (short[]) field.get(object);
-                            for (int i = 0; i < intArray.length; i++) {
-                                jsonArray.add(intArray[i]);
-                            }
-                        } else if (clazz.equals(long.class)) {
-                            long[] intArray = (long[]) field.get(object);
-                            for (int i = 0; i < intArray.length; i++) {
-                                jsonArray.add(intArray[i]);
-                            }
-                        } else if (clazz.equals(float.class)) {
-                            float[] intArray = (float[]) field.get(object);
-                            for (int i = 0; i < intArray.length; i++) {
-                                jsonArray.add(intArray[i]);
-                            }
-                        } else if (clazz.equals(double.class)) {
-                            double[] intArray = (double[]) field.get(object);
-                            for (int i = 0; i < intArray.length; i++) {
-                                jsonArray.add(intArray[i]);
-                            }
-                        } else if (clazz.equals(boolean.class)) {
-                            boolean[] intArray = (boolean[]) field.get(object);
-                            for (int i = 0; i < intArray.length; i++) {
-                                jsonArray.add(intArray[i]);
-                            }
-                        } else if (clazz.equals(char.class)) {
-                            char[] intArray = (char[]) field.get(object);
-                            for (int i = 0; i < intArray.length; i++) {
-                                jsonArray.add(intArray[i]);
-                            }
-                        }
-                        jsonObject.put(field.getName(), jsonArray);
-                        continue;
-                    } else if (isPrimitiveWrapper(clazz)) {
-                        if (clazz.newInstance() instanceof Number) {
-                            objects = (Number[]) field.get(object);
-                        } else if (clazz.newInstance() instanceof Boolean) {
-                            objects = (Boolean[]) field.get(object);
-                        } else {
-                            objects = (String[]) field.get(object);
-                        }
+                for (Field field : object.getClass().getDeclaredFields()) {
+                    field.setAccessible(true);
+                    if (isNull(object, field)) {
+                        jsonObject.put(field.getName(), null);
                     } else {
-                        objects = (Object[]) field.get(object);
-                        for (int j = 0; j < objects.length; j++) {
-                            objects[j] = convertToJsonObject(objects[j]);
+                        Object val = field.get(object);
+                        if (val.getClass().isPrimitive() || isPrimitiveWrapper(val)) {
+                            jsonObject.put(field.getName(), val);
+                        } else if (isArray(object, field)) {
+                            Class clazz = field.getType().getComponentType();
+                            JSONArray jsonArray = new JSONArray();
+                            Object[] objects;
+                            if (clazz.isPrimitive()) {
+                                if (clazz.equals(int.class)) {
+                                    int[] intArray = (int[]) field.get(object);
+                                    for (int i = 0; i < intArray.length; i++) {
+                                        jsonArray.add(intArray[i]);
+                                    }
+                                } else if (clazz.equals(byte.class)) {
+                                    byte[] intArray = (byte[]) field.get(object);
+                                    for (int i = 0; i < intArray.length; i++) {
+                                        jsonArray.add(intArray[i]);
+                                    }
+                                } else if (clazz.equals(short.class)) {
+                                    short[] intArray = (short[]) field.get(object);
+                                    for (int i = 0; i < intArray.length; i++) {
+                                        jsonArray.add(intArray[i]);
+                                    }
+                                } else if (clazz.equals(long.class)) {
+                                    long[] intArray = (long[]) field.get(object);
+                                    for (int i = 0; i < intArray.length; i++) {
+                                        jsonArray.add(intArray[i]);
+                                    }
+                                } else if (clazz.equals(float.class)) {
+                                    float[] intArray = (float[]) field.get(object);
+                                    for (int i = 0; i < intArray.length; i++) {
+                                        jsonArray.add(intArray[i]);
+                                    }
+                                } else if (clazz.equals(double.class)) {
+                                    double[] intArray = (double[]) field.get(object);
+                                    for (int i = 0; i < intArray.length; i++) {
+                                        jsonArray.add(intArray[i]);
+                                    }
+                                } else if (clazz.equals(boolean.class)) {
+                                    boolean[] intArray = (boolean[]) field.get(object);
+                                    for (int i = 0; i < intArray.length; i++) {
+                                        jsonArray.add(intArray[i]);
+                                    }
+                                } else if (clazz.equals(char.class)) {
+                                    char[] intArray = (char[]) field.get(object);
+                                    for (int i = 0; i < intArray.length; i++) {
+                                        jsonArray.add(intArray[i]);
+                                    }
+                                }
+                                jsonObject.put(field.getName(), jsonArray);
+                                continue;
+                            } else if (isPrimitiveWrapper(clazz)) {
+                                if (Number.class.isAssignableFrom(clazz)) {
+                                    objects = (Number[]) field.get(object);
+                                } else if (Boolean.class.isAssignableFrom(clazz)) {
+                                    objects = (Boolean[]) field.get(object);
+                                } else {
+                                    objects = (String[]) field.get(object);
+                                }
+                            } else {
+                                objects = (Object[]) field.get(object);
+                                for (int j = 0; j < objects.length; j++) {
+                                    objects[j] = convertToJsonObject(objects[j]);
+                                }
+                            }
+                            jsonArray.addAll(Arrays.asList(objects));
+                            jsonObject.put(field.getName(), jsonArray);
+                        } else if (isList(object, field)) {
+                            String parameterTypeName = ((ParameterizedType) field.getGenericType())
+                                    .getActualTypeArguments()[0]
+                                    .getTypeName();
+                            Class clazz = Class.forName(parameterTypeName);
+                            JSONArray jsonArray = new JSONArray();
+                            Object[] objects = ((List<?>) field.get(object)).toArray();
+                            if (!isPrimitiveWrapper(clazz)) {
+                                for (int j = 0; j < objects.length; j++) {
+                                    objects[j] = convertToJsonObject(objects[j]);
+                                }
+                            }
+                            jsonArray.addAll(Arrays.asList(objects));
+                            jsonObject.put(field.getName(), jsonArray);
+                        } else if (isSet(object, field)) {
+                            String parameterTypeName = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0].getTypeName();
+                            Class clazz = Class.forName(parameterTypeName);
+                            JSONArray jsonArray = new JSONArray();
+                            Object[] x = ((Set<?>) field.get(object)).toArray();
+                            if (!isPrimitiveWrapper(clazz)) {
+                                for (int j = 0; j < x.length; j++) {
+                                    x[j] = convertToJsonObject(x[j]);
+                                }
+                            }
+                            jsonArray.addAll(Arrays.asList(x));
+                            jsonObject.put(field.getName(), jsonArray);
+                        } else if (isMap(object, field)) {
+                            Map<?, ?> map = (Map<?, ?>) field.get(object);
+                            Set<? extends Map.Entry<?, ?>> entries = map.entrySet();
+                            List<Object> keys = new ArrayList<>();
+                            List<Object> values = new ArrayList<>();
+                            entries.forEach(entry -> {
+                                keys.add(entry.getKey());
+                                values.add(entry.getValue());
+                            });
+                            Class keyClazz = keys.get(0).getClass();
+                            Class valueClazz = values.get(0).getClass();
+                            Object[] keyArray = keys.toArray();
+                            Object[] valueArray = values.toArray();
+                            JSONArray jsonArray = new JSONArray();
+                            if (!isPrimitiveWrapper(keyClazz)) {
+                                for (int j = 0; j < keyArray.length; j++) {
+                                    keyArray[j] = convertToJsonObject(keyArray[j]);
+                                }
+                            }
+                            if (!isPrimitiveWrapper(valueClazz)) {
+                                for (int j = 0; j < valueArray.length; j++) {
+                                    valueArray[j] = convertToJsonObject(valueArray[j]);
+                                }
+                            }
+                            for (int j = 0; j < keyArray.length; j++) {
+                                JSONObject localJson = new JSONObject();
+                                localJson.put(keyArray[j], valueArray[j]);
+                                jsonArray.add(localJson);
+                            }
+                            jsonObject.put(field.getName(), jsonArray);
                         }
                     }
-                    jsonArray.addAll(Arrays.asList(objects));
-                    jsonObject.put(field.getName(), jsonArray);
-                } else if (isList(object, field)) {
-                    String parameterTypeName = ((ParameterizedType) field.getGenericType())
-                            .getActualTypeArguments()[0]
-                            .getTypeName();
-                    Class clazz = Class.forName(parameterTypeName);
-                    JSONArray jsonArray = new JSONArray();
-                    Object[] objects = ((List<?>) field.get(object)).toArray();
-                    if (!isPrimitiveWrapper(clazz)) {
-                        for (int j = 0; j < objects.length; j++) {
-                            objects[j] = convertToJsonObject(objects[j]);
-                        }
-                    }
-                    jsonArray.addAll(Arrays.asList(objects));
-                    jsonObject.put(field.getName(), jsonArray);
-                } else if (isSet(object, field)) {
-                    String parameterTypeName = ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0].getTypeName();
-                    Class clazz = Class.forName(parameterTypeName);
-                    JSONArray jsonArray = new JSONArray();
-                    Object[] x = ((Set<?>) field.get(object)).toArray();
-                    if (!isPrimitiveWrapper(clazz)) {
-                        for (int j = 0; j < x.length; j++) {
-                            x[j] = convertToJsonObject(x[j]);
-                        }
-                    }
-                    jsonArray.addAll(Arrays.asList(x));
-                    jsonObject.put(field.getName(), jsonArray);
-                } else if (isMap(object, field)) {
-                    Map<?, ?> map = (Map<?, ?>) field.get(object);
-                    Set<? extends Map.Entry<?, ?>> entries = map.entrySet();
-                    List<Object> keys = new ArrayList<>();
-                    List<Object> values = new ArrayList<>();
-                    entries.forEach(entry -> {
-                        keys.add(entry.getKey());
-                        values.add(entry.getValue());
-                    });
-                    Class keyClazz = keys.get(0).getClass();
-                    Class valueClazz = values.get(0).getClass();
-                    Object[] keyArray = keys.toArray();
-                    Object[] valueArray = values.toArray();
-                    JSONArray jsonArray = new JSONArray();
-                    if (!isPrimitiveWrapper(keyClazz)) {
-                        for (int j = 0; j < keyArray.length; j++) {
-                            keyArray[j] = convertToJsonObject(keyArray[j]);
-                        }
-                    }
-                    if (!isPrimitiveWrapper(valueClazz)) {
-                        for (int j = 0; j < valueArray.length; j++) {
-                            valueArray[j] = convertToJsonObject(valueArray[j]);
-                        }
-                    }
-                    for (int j = 0; j < keyArray.length; j++) {
-                        JSONObject localJson = new JSONObject();
-                        localJson.put(keyArray[j], valueArray[j]);
-                        jsonArray.add(localJson);
-                    }
-                    jsonObject.put(field.getName(), jsonArray);
                 }
             }
-        }
         return jsonObject;
     }
 
@@ -210,13 +197,21 @@ public class JsonSerializator {
     }
 
     private static boolean isPrimitiveWrapper(Class clazz) {
-        Object obj;
-        try {
-            obj = clazz.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
-            return false;
-        }
-        return obj instanceof String || obj instanceof Number || obj instanceof Boolean;
+        return String.class.isAssignableFrom(clazz)
+                || Number.class.isAssignableFrom(clazz)
+                || Boolean.class.isAssignableFrom(clazz);
+    }
+
+    private static boolean isPrimitiveWrapper(Object object) {
+        return object instanceof String
+                || object instanceof Integer
+                || object instanceof Boolean
+                || object instanceof Double
+                || object instanceof Byte
+                || object instanceof Long
+                || object instanceof Short
+                || object instanceof Float
+                || object instanceof Character;
     }
 
     private static boolean isList(Object object, Field field) throws IllegalAccessException {
@@ -230,4 +225,6 @@ public class JsonSerializator {
     private static boolean isMap(Object object, Field field) throws IllegalAccessException {
         return field.get(object) instanceof Map;
     }
+
+
 }

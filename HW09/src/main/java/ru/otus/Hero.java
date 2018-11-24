@@ -13,6 +13,9 @@ public class Hero {
     private String[] features;
     private List<Weapon> weapons;
     private Map<String, String> notes;
+    private String nullString = null;
+    private int[] params = {90, 60, 90};
+
 
     public Hero(
             String specialization,

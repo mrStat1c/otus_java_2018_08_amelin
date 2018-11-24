@@ -20,8 +20,10 @@ public class Main {
                 Map.of("first", "text1text1text1", "second", "text2text2text2")
         );
 
-        String jsonString = JsonSerializator.getJsonString(hero1);
-        System.out.println(jsonString);
+//        System.out.println(JsonSerializator.getJsonString(hero1));
+//        System.out.println(JsonSerializator.getJsonString(null));
+//        System.out.println(JsonSerializator.getJsonString(List.of(1,2,3)));
+        System.out.println(JsonSerializator.getJsonString(new int[]{1,2,3}));
 
     }
 

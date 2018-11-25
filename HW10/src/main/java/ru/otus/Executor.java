@@ -15,15 +15,16 @@ public class Executor {
         this.connection = connection;
     }
 
-    public void execUpdate(String update, ExecuteHandler handler) throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement(update)){
-            handler.accept(stmt);
+    public void execUpdate(ExecuteHandler handler) throws SQLException, IllegalAccessException {
+        try (Statement stmt = connection.createStatement()){
+          stmt.execute(handler.getQuery());
         }
     }
 
     public DataSet execSelect(String select, SelectHandler handler) throws SQLException {
-        try (PreparedStatement stmt = connection.prepareStatement(select)){
-             return handler.getResultQuery(stmt);
+        try (Statement stmt = connection.createStatement()){
+            ResultSet resultSet = stmt.executeQuery(select);
+            return handler.getResultQuery(resultSet);
         }
     }
 }

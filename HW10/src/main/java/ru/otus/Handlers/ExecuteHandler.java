@@ -5,5 +5,5 @@ import java.sql.SQLException;
 
 @FunctionalInterface
 public interface ExecuteHandler {
-    void accept(PreparedStatement preparedStatement) throws SQLException;
+    String getQuery() throws SQLException, IllegalAccessException;
 }

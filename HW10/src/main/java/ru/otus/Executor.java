@@ -1,30 +1,35 @@
 package ru.otus;
-
-import ru.otus.Handlers.ExecuteHandler;
-import ru.otus.Handlers.SelectHandler;
-
+import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 
 public class Executor {
 
     private Connection connection;
-    private Statement statement;
-    private String sqlQuery;
+    private DataSetQueryBuilder queryBuilder = new DataSetQueryBuilder();
 
     public Executor(Connection connection) {
         this.connection = connection;
     }
 
-    public void execUpdate(ExecuteHandler handler) throws SQLException, IllegalAccessException {
+    public void save(DataSet dataSet) throws SQLException, IllegalAccessException, NoSuchFieldException {
         try (Statement stmt = connection.createStatement()){
-          stmt.execute(handler.getQuery());
+          stmt.execute(queryBuilder.getInsertQuery(dataSet));
         }
     }
 
-    public DataSet execSelect(String select, SelectHandler handler) throws SQLException {
-        try (Statement stmt = connection.createStatement()){
-            ResultSet resultSet = stmt.executeQuery(select);
-            return handler.getResultQuery(resultSet);
+    public DataSet load(Class<? extends DataSet> clazz, int userId) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchFieldException {
+        try (PreparedStatement stmt = connection.prepareStatement(DbQueries.USER_SELECT)){
+            stmt.setInt(1, userId);
+            ResultSet resultSet = stmt.executeQuery();
+            resultSet.next();
+            DataSet dataSet = clazz.getConstructor().newInstance();
+            int columnCount = resultSet.getMetaData().getColumnCount();
+            for(int i = 1; i <= columnCount; i++){
+                String columnName = resultSet.getMetaData().getColumnName(i);
+                String columnValue = resultSet.getString(i);
+                ReflectionHelper.setField(dataSet, columnName, columnValue);
+            }
+            return dataSet;
         }
     }
 }

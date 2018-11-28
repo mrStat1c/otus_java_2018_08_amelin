@@ -5,21 +5,16 @@ import java.util.*;
 
 public class ReflectionHelper {
 
-    private static Map<String, List<String>> classFields = new HashMap<>();
+    private static Map<String, List<Field>> classFields = new HashMap<>();
 
-    public static List<String> getClassFieldNames(Object object) {
+    public static List<Field> getClassFields(Object object) {
         Class clazz = object.getClass();
-        if (classFields.containsKey(clazz)) {
-            return classFields.get(clazz);
+        if (classFields.containsKey(clazz.getName())) {
+            return classFields.get(clazz.getName());
         } else {
             List<Field> fieldList = Arrays.asList(clazz.getDeclaredFields());
-            List<String> fieldNameList = new ArrayList<>();
-            for (Field field : fieldList) {
-                field.setAccessible(true);
-                fieldNameList.add(field.getName());
-            }
-            classFields.put(clazz.getName(), fieldNameList);
-            return fieldNameList;
+            classFields.put(clazz.getName(), fieldList);
+            return fieldList;
         }
     }
 

@@ -17,6 +17,7 @@ public class Executor {
         }
     }
 
+
     public DataSet load(Class<? extends DataSet> clazz, int userId) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchFieldException {
         try (PreparedStatement stmt = connection.prepareStatement(DbQueries.USER_SELECT)){
             stmt.setInt(1, userId);
@@ -30,6 +31,12 @@ public class Executor {
                 ReflectionHelper.setField(dataSet, columnName, columnValue);
             }
             return dataSet;
+        }
+    }
+
+    public void execute(String query) throws SQLException {
+        try(Statement statement = connection.createStatement()){
+            statement.execute(query);
         }
     }
 }

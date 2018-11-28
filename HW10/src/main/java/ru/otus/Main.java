@@ -10,7 +10,8 @@ public class Main {
 
         DbConnector dbConnector = new DbConnector();
         dbConnector.registerDriver("com.mysql.cj.jdbc.Driver");
-        Connection connection = dbConnector.getConnection("localhost", "3306", "root", "root");
+        Connection connection = dbConnector.getConnection("localhost", "3306", "hw10","root", "root");
+
 
         UserDataSet user1 = new UserDataSet();
         user1.setName("Petr");
@@ -23,11 +24,13 @@ public class Main {
         user3.setAge(22);
 
         Executor executor = new Executor(connection);
+        executor.execute(DbQueries.CREATE_USER_TABLE);
+
         executor.save(user1);
         executor.save(user2);
         executor.save(user3);
 
-        UserDataSet userX = (UserDataSet) executor.load(UserDataSet.class, 66);
+        UserDataSet userX = (UserDataSet) executor.load(UserDataSet.class, 2);
         System.out.println("Name = " + userX.getName() + ", Age = " + userX.getAge());
 
     }

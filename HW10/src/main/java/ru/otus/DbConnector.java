@@ -11,9 +11,9 @@ public class DbConnector {
         Class.forName(driverName).getConstructor().newInstance();
     }
 
-    public Connection getConnection(String url, String port, String user, String password) throws SQLException {
+    public Connection getConnection(String url, String port, String scheme, String user, String password) throws SQLException {
         return DriverManager.getConnection(
-        String.format("jdbc:mysql://%s:%s?user=%s&password=%s&%s", url, port, user, password,
+        String.format("jdbc:mysql://%s:%s/%s?user=%s&password=%s&%s", url, port, scheme, user, password,
                         "useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC"));
 
     }

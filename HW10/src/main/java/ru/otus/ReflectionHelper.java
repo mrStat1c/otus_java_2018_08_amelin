@@ -41,5 +41,19 @@ public class ReflectionHelper {
             field.set(object, Long.parseLong(fieldValue));
         }
     }
+
+    public static boolean isString(Field field){
+        return String.class.isAssignableFrom(field.getType());
+    }
+
+    public static boolean isInt(Field field){
+        return int.class.isAssignableFrom(field.getType())
+                || Integer.class.isAssignableFrom(field.getType());
+    }
+
+    public static boolean isLong(Field field){
+        return long.class.isAssignableFrom(field.getType())
+                || Long.class.isAssignableFrom(field.getType());
+    }
 }
 

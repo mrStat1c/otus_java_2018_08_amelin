@@ -30,7 +30,7 @@ public class Main {
         executor.save(user2);
         executor.save(user3);
 
-        UserDataSet userX = (UserDataSet) executor.load(UserDataSet.class, 2);
+        UserDataSet userX = (UserDataSet) executor.load(UserDataSet.class, 24);
         System.out.println("Name = " + userX.getName() + ", Age = " + userX.getAge());
 
     }

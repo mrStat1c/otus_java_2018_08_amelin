@@ -42,8 +42,8 @@ public class Executor {
             int columnCount = resultSet.getMetaData().getColumnCount();
             for (int i = 1; i <= columnCount; i++) {
                 String columnName = resultSet.getMetaData().getColumnName(i);
-                String columnValue = resultSet.getString(i);
-                ReflectionHelper.setField(dataSet, columnName, columnValue);
+                Object value = resultSet.getObject(columnName);
+                ReflectionHelper.setField(dataSet, columnName, value);
             }
             return dataSet;
         }

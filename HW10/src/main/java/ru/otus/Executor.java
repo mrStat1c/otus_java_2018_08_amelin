@@ -20,13 +20,7 @@ public class Executor {
             for (int i = 1; i <= fields.size(); i++) {
                 Field localField = fields.get(i - 1);
                 localField.setAccessible(true);
-                if (ReflectionHelper.isInt(localField)) {
-                    statement.setInt(i, (Integer) localField.get(dataSet));
-                } else if (ReflectionHelper.isLong(localField)) {
-                    statement.setLong(i, (Long) localField.get(dataSet));
-                } else {
-                    statement.setString(i, String.valueOf(localField.get(dataSet)));
-                }
+                statement.setObject(i, localField.get(dataSet));
             }
             statement.execute();
         }

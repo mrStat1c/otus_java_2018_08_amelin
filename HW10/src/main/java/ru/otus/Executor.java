@@ -32,22 +32,27 @@ public class Executor {
 
 
     public DataSet load(Class<? extends DataSet> clazz, int userId) throws SQLException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException, NoSuchFieldException {
-        try (PreparedStatement stmt = connection.prepareStatement(DbQueries.USER_SELECT)) {
-            stmt.setInt(1, userId);
-            ResultSet resultSet = stmt.executeQuery();
-            if (resultSet.next()) {
-                DataSet dataSet = clazz.getConstructor().newInstance();
-                int columnCount = resultSet.getMetaData().getColumnCount();
-                for (int i = 1; i <= columnCount; i++) {
-                    String columnName = resultSet.getMetaData().getColumnName(i);
-                    Object value = resultSet.getObject(columnName);
-                    ReflectionHelper.setField(dataSet, columnName, value);
+        if (clazz != null) {
+            try (PreparedStatement stmt = connection.prepareStatement(DbQueries.USER_SELECT)) {
+                stmt.setInt(1, userId);
+                ResultSet resultSet = stmt.executeQuery();
+                if (resultSet.next()) {
+                    DataSet dataSet = clazz.getConstructor().newInstance();
+                    int columnCount = resultSet.getMetaData().getColumnCount();
+                    for (int i = 1; i <= columnCount; i++) {
+                        String columnName = resultSet.getMetaData().getColumnName(i);
+                        Object value = resultSet.getObject(columnName);
+                        ReflectionHelper.setField(dataSet, columnName, value);
+                    }
+                    return dataSet;
+                } else {
+                    System.err.println("Entity with id = " + userId + " not found in Db!");
+                    return null;
                 }
-                return dataSet;
-            } else {
-                System.err.println("Entity with id = " + userId + " not found in Db!");
-                return null;
             }
+        } else {
+            System.err.println("Input parameter 'clazz' is null!");
+            return null;
         }
     }
 

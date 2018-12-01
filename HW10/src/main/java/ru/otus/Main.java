@@ -22,6 +22,7 @@ public class Main {
         UserDataSet user3 = new UserDataSet();
         user3.setName("Vasya");
         user3.setAge(22);
+        UserDataSet user0 = null;
 
         Executor executor = new Executor(connection);
         executor.execute(DbQueries.CREATE_USER_TABLE);
@@ -30,8 +31,7 @@ public class Main {
         executor.save(user2);
         executor.save(user3);
 
-        UserDataSet userX = (UserDataSet) executor.load(UserDataSet.class, 24);
-        System.out.println("Name = " + userX.getName() + ", Age = " + userX.getAge());
-
+        UserDataSet userX = (UserDataSet) executor.load(UserDataSet.class, 999);
+        executor.save(user0);
     }
 }

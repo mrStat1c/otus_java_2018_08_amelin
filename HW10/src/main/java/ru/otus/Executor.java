@@ -15,14 +15,18 @@ public class Executor {
     }
 
     public void save(DataSet dataSet) throws SQLException, IllegalAccessException {
-        try (PreparedStatement statement = connection.prepareStatement(queryBuilder.getInsertQuery(dataSet))) {
-            List<Field> fields = ReflectionHelper.getClassFields(dataSet);
-            for (int i = 1; i <= fields.size(); i++) {
-                Field localField = fields.get(i - 1);
-                localField.setAccessible(true);
-                statement.setObject(i, localField.get(dataSet));
+        if (dataSet != null) {
+            try (PreparedStatement statement = connection.prepareStatement(queryBuilder.getInsertQuery(dataSet))) {
+                List<Field> fields = ReflectionHelper.getClassFields(dataSet);
+                for (int i = 1; i <= fields.size(); i++) {
+                    Field localField = fields.get(i - 1);
+                    localField.setAccessible(true);
+                    statement.setObject(i, localField.get(dataSet));
+                }
+                statement.execute();
             }
-            statement.execute();
+        } else {
+            System.err.println("Object was not saved as null");
         }
     }
 
@@ -31,15 +35,19 @@ public class Executor {
         try (PreparedStatement stmt = connection.prepareStatement(DbQueries.USER_SELECT)) {
             stmt.setInt(1, userId);
             ResultSet resultSet = stmt.executeQuery();
-            resultSet.next();
-            DataSet dataSet = clazz.getConstructor().newInstance();
-            int columnCount = resultSet.getMetaData().getColumnCount();
-            for (int i = 1; i <= columnCount; i++) {
-                String columnName = resultSet.getMetaData().getColumnName(i);
-                Object value = resultSet.getObject(columnName);
-                ReflectionHelper.setField(dataSet, columnName, value);
+            if (resultSet.next()) {
+                DataSet dataSet = clazz.getConstructor().newInstance();
+                int columnCount = resultSet.getMetaData().getColumnCount();
+                for (int i = 1; i <= columnCount; i++) {
+                    String columnName = resultSet.getMetaData().getColumnName(i);
+                    Object value = resultSet.getObject(columnName);
+                    ReflectionHelper.setField(dataSet, columnName, value);
+                }
+                return dataSet;
+            } else {
+                System.err.println("Entity with id = " + userId + " not found in Db!");
+                return null;
             }
-            return dataSet;
         }
     }
 

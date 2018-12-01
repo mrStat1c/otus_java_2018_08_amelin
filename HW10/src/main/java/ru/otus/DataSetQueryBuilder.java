@@ -20,7 +20,7 @@ public class DataSetQueryBuilder {
                     .collect(Collectors.toList());
             String placeHolders = String.join(", ", Collections.nCopies(fields.size(), "?"));
             return query
-                    .append("INSERT INTO hw10.user (")
+                    .append("INSERT INTO user (")
                     .append(getStringFromList(fieldNames))
                     .append(") VALUES (")
                     .append(placeHolders)

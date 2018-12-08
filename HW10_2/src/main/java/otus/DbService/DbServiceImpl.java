@@ -1,4 +1,4 @@
-package ru.otus;
+package otus.DbService;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -6,8 +6,9 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import ru.otus.DAO.UserDataSetDAO;
-import ru.otus.DataSets.UserDataSet;
+import otus.DAO.UserDataSetDAO;
+import otus.DataSets.DataSet;
+import otus.DataSets.UserDataSet;
 
 import java.util.function.Function;
 
@@ -26,21 +27,24 @@ public class DbServiceImpl implements DbService {
         return configuration.buildSessionFactory(serviceRegistry);
     }
 
-    public void save(UserDataSet dataSet) {
+    @Override
+    public void save(DataSet dataSet) {
         try (Session session = sessionFactory.openSession()) {
             Transaction transaction = session.beginTransaction();
             UserDataSetDAO dao = new UserDataSetDAO(session);
-            dao.save(dataSet);
+            dao.save((UserDataSet) dataSet);
             transaction.commit();
         }
     }
 
-    public UserDataSet load(Class clazz, int id) {
+    @Override
+    public DataSet load(Class<? extends DataSet> clazz, int id) {
         return runInSession(session -> {
             UserDataSetDAO dao = new UserDataSetDAO(session);
             return dao.load(id);
         });
     }
+
 
     private <R> R runInSession(Function<Session, R> function) {
         try (Session session = sessionFactory.openSession()) {
@@ -54,5 +58,4 @@ public class DbServiceImpl implements DbService {
     public void shutdown() {
         sessionFactory.close();
     }
-
 }

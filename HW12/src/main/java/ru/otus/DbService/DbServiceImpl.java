@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.DbService;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;

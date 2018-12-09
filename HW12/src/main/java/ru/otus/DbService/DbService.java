@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.DbService;
 
 import ru.otus.DataSets.UserDataSet;
 

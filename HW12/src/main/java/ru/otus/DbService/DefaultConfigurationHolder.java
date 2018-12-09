@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.DbService;
 
 import org.hibernate.cfg.Configuration;
 import ru.otus.DataSets.AddressDataSet;
@@ -17,7 +17,7 @@ public class DefaultConfigurationHolder {
         configuration.setProperty("hibernate.connection.username", "root");
         configuration.setProperty("hibernate.connection.password", "root");
         configuration.setProperty("hibernate.show_sql", "false");
-        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
+        configuration.setProperty("hibernate.hbm2ddl.auto", "update");
         configuration.setProperty("hibernate.connection.useSSL", "false");
         configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
 

@@ -1,0 +1,27 @@
+<html xmlns="http://www.w3.org/1999/xhtml" content="text/html;">
+<head>
+    <title>Admin page</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+<div>
+    <p><b>Добавление пользователя:</b></p>
+    <form action="/admin" method="POST">
+        Имя: <input type="text" name="name"/><br/>
+        Возраст: <input type="text" name="age"/><br/>
+        <input type="submit" value="Создать">
+    </form>
+    <p><b>Получение имени пользователя:</b></p>
+    <form action="/admin" method="GET">
+        id: <input type="text" name="id"/><br/>
+        Имя: ${userName}
+        <input type="submit" value="Получить">
+    </form>
+    <p><b>Получение количества полльзователей:</b></p>
+    <form action="/admin" method="GET">
+        Количество пользователей: ${userCount}<br/>
+        <input type="submit" value="Получить">
+    </form>
+</div>
+</body>
+</html>

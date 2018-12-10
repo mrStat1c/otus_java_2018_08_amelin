@@ -16,7 +16,7 @@ public class DbServiceImpl implements DbService {
     private final SessionFactory sessionFactory;
 
     public DbServiceImpl(Configuration configuration) {
-        this.sessionFactory =  createSessionFactory(configuration);
+        this.sessionFactory = createSessionFactory(configuration);
     }
 
     private static SessionFactory createSessionFactory(Configuration configuration) {
@@ -55,4 +55,11 @@ public class DbServiceImpl implements DbService {
         sessionFactory.close();
     }
 
+    public long getRecordCount(String entityName) {
+        try (Session session = sessionFactory.openSession()) {
+            return session
+                    .createQuery("select count(1) from " + entityName, Long.class)
+                    .getSingleResult();
+        }
+    }
 }

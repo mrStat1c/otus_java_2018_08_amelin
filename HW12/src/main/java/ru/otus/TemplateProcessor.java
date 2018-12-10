@@ -12,7 +12,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TemplateProcessor {
-    //задаем директорию, где лежат темплейт - страницы и дефолтные плейсхолдеры
     private static final String HTML_DIR = "../HW12/public_html";
     private static Map<String, String> pageVariables = new HashMap<>();
     static {
@@ -28,7 +27,6 @@ public class TemplateProcessor {
         configuration.setDefaultEncoding("UTF-8");
     }
 
-    //передаем имя файла - теплейта и данные, которые нужно в него подставить. Возвращается страница с подстановками в виде строки
     String getPage(String filename, Map<String, String> data) throws IOException {
         try (Writer stream = new StringWriter()) {
             Template template = configuration.getTemplate(filename);

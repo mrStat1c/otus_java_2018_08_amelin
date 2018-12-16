@@ -1,10 +1,10 @@
 package ru.otus;
 
 import org.hibernate.LazyInitializationException;
-import org.hibernate.cfg.Configuration;
 import ru.otus.DataSets.UserDataSet;
+import ru.otus.DbService.DbService;
 import ru.otus.DbService.DbServiceImpl;
-import ru.otus.DbService.DefaultConfigurationHolder;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,22 +14,27 @@ import java.util.Map;
 
 public class UserServlet extends HttpServlet {
 
-    private Configuration configuration = DefaultConfigurationHolder.getConfiguration();
-    private DbServiceImpl dbService = new DbServiceImpl(configuration);
+    private final static String PARAMETER_NAME = "name";
+    private final static String PARAMETER_AGE = "age";
+    private final static String PARAMETER_REQUEST_TYPE = "requestType";
+    private final static String PARAMETER_ID = "id";
+    private final static String ADMIN_PAGE_NAME = "admin.html";
+    private DbService dbService;
 
     private TemplateProcessor templateProcessor = new TemplateProcessor();
     private Map<String, String[]> requestParameters = new HashMap<>();
 
-    public UserServlet() throws IOException {
+    public UserServlet(DbServiceImpl dbService) throws IOException {
+        this.dbService = dbService;
     }
 
     public void doPost(HttpServletRequest request,
                        HttpServletResponse response) throws IOException {
         requestParameters = request.getParameterMap();
-        if (requestParameters.containsKey("name")
-                && requestParameters.containsKey("age")) {
-            String userName = requestParameters.get("name")[0];
-            String userAge = requestParameters.get("age")[0];
+        if (requestParameters.containsKey(PARAMETER_NAME)
+                && requestParameters.containsKey(PARAMETER_AGE)) {
+            String userName = requestParameters.get(PARAMETER_NAME)[0];
+            String userAge = requestParameters.get(PARAMETER_AGE)[0];
             if (!userName.isEmpty() && !userAge.isEmpty()) {
                 UserDataSet user = new UserDataSet();
                 user.setName(userName);
@@ -50,25 +55,29 @@ public class UserServlet extends HttpServlet {
     public void doGet(HttpServletRequest request,
                       HttpServletResponse response) throws IOException {
         requestParameters = request.getParameterMap();
-        if (requestParameters.containsKey("id")) {
-            String id = requestParameters.get("id")[0];
-            if (!id.isEmpty()) {
-                UserDataSet userDataSet = dbService.load(UserDataSet.class, Integer.parseInt(requestParameters.get("id")[0]));
-                setOK(response);
-                String userName;
-                try {
-                    userName = userDataSet.getName();
-                } catch (LazyInitializationException e) {
-                    userName = "User not found!";
+        if (requestParameters.containsKey(PARAMETER_REQUEST_TYPE)) {
+            if (requestParameters.get(PARAMETER_REQUEST_TYPE)[0].equals("nameById")) {
+                if (requestParameters.containsKey(PARAMETER_ID)) {
+                    String id = requestParameters.get(PARAMETER_ID)[0];
+                    if (!id.isEmpty()) {
+                        UserDataSet userDataSet = dbService.load(UserDataSet.class, Integer.parseInt(requestParameters.get("id")[0]));
+                        setOK(response);
+                        String userName;
+                        try {
+                            userName = userDataSet.getName();
+                        } catch (LazyInitializationException e) {
+                            userName = "User not found!";
+                        }
+                        response.getWriter().println(getAdminPage(Map.of("userName", userName)));
+                    } else {
+                        response.sendError(400, "Parameter id not filled!");
+                    }
                 }
-                response.getWriter().println(getAdminPage(Map.of("userName", userName)));
-            } else {
-                response.sendError(400, "Parameter id not filled!");
+            } else if (requestParameters.get(PARAMETER_REQUEST_TYPE)[0].equals("usersCount")) {
+                setOK(response);
+                response.getWriter().println(getAdminPage(Map.of("userCount",
+                        String.valueOf(dbService.getRecordCount("UserDataSet")))));
             }
-        } else if (requestParameters.containsKey("getCount")) {
-            setOK(response);
-            response.getWriter().println(getAdminPage(Map.of("userCount",
-                    String.valueOf(dbService.getRecordCount("UserDataSet")))));
         } else {
             setOK(response);
             response.getWriter().println(getAdminPage(new HashMap<>()));
@@ -76,7 +85,7 @@ public class UserServlet extends HttpServlet {
     }
 
     private String getAdminPage(Map<String, String> pageVariables) throws IOException {
-        return templateProcessor.getPage("admin.html", pageVariables);
+        return templateProcessor.getPage(ADMIN_PAGE_NAME, pageVariables);
     }
 
 

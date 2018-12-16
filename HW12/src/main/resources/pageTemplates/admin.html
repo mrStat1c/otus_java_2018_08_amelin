@@ -13,6 +13,7 @@
     </form>
     <p><b>Получение имени пользователя:</b></p>
     <form action="/admin" method="GET">
+        <input type="hidden" name="requestType" value="nameById">
         id: <input type="text" name="id"/><br/>
         Имя: ${userName}
         <input type="submit" value="Получить">
@@ -20,7 +21,7 @@
     <p><b>Получение количества полльзователей:</b></p>
     <form action="/admin" method="GET">
         Количество пользователей: ${userCount}<br/>
-        <input type="hidden" name="getCount">
+        <input type="hidden" name="requestType" value="usersCount">
         <input type="submit" value="Получить">
     </form>
 </div>

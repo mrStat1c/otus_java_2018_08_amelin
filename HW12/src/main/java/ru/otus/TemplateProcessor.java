@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class TemplateProcessor {
-    private static final String HTML_DIR = "../HW12/public_html";
+    private static final String HTML_DIR = "../HW12/src/main/resources/pageTemplates";
     private static Map<String, String> pageVariables = new HashMap<>();
     static {
         pageVariables.put("userName", "");

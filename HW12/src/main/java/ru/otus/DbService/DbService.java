@@ -9,4 +9,6 @@ public interface DbService {
     UserDataSet load(Class clazz, int id);
 
     void shutdown();
+
+    long getRecordCount(String entityName);
 }

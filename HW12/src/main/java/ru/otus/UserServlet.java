@@ -24,7 +24,7 @@ public class UserServlet extends HttpServlet {
     private TemplateProcessor templateProcessor = new TemplateProcessor();
     private Map<String, String[]> requestParameters = new HashMap<>();
 
-    public UserServlet(DbServiceImpl dbService) throws IOException {
+    public UserServlet(DbService dbService) throws IOException {
         this.dbService = dbService;
     }
 

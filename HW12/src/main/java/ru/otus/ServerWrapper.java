@@ -5,6 +5,7 @@ import org.eclipse.jetty.server.handler.HandlerList;
 import org.eclipse.jetty.server.handler.ResourceHandler;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.eclipse.jetty.servlet.ServletHolder;
+import ru.otus.DbService.DbService;
 import ru.otus.DbService.DbServiceImpl;
 import ru.otus.DbService.DefaultConfigurationHolder;
 
@@ -30,12 +31,10 @@ public class ServerWrapper {
     private void configureServer() throws IOException {
         ResourceHandler resourceHandler = new ResourceHandler();
         resourceHandler.setResourceBase(indexPageDirectory);
+        DbService dbService = new DbServiceImpl(DefaultConfigurationHolder.getConfiguration());
 
         ServletContextHandler context = new ServletContextHandler(ServletContextHandler.SESSIONS);
-        context.setAttribute("dbService", new DbServiceImpl(DefaultConfigurationHolder.getConfiguration()));
-        UserServlet userServlet = new UserServlet((DbServiceImpl) context
-                .getServletContext()
-                .getAttribute("dbService"));
+        UserServlet userServlet = new UserServlet(dbService);
         context.addServlet(new ServletHolder(userServlet), "/admin");
 
         server = new Server(port);

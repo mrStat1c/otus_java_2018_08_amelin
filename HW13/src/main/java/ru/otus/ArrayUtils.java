@@ -3,8 +3,19 @@ package ru.otus;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class ArrayUtils {
+
+    public static int[] generateArray(int elementCount, int maxElementValue){
+        int[] mas = new int[elementCount];
+        Random random = new Random();
+        for (int i = 0; i < elementCount; i++) {
+            mas[i] = random.nextInt(maxElementValue);
+        }
+        return mas;
+    }
+
 
     public static int[] parallelSort(int[] array, int threadCount) throws InterruptedException {
 

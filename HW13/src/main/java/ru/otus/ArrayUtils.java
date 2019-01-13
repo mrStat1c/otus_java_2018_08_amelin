@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ArrayUtils {
 
@@ -21,7 +22,7 @@ public class ArrayUtils {
 
         int partedArraySize;
         int lastPartedArraySize;
-        List<int[]> partedArrays = new ArrayList<>();
+        List<int[]> partedArrays = new CopyOnWriteArrayList<>();
         List<Thread> threads = new ArrayList<>();
         if (array.length % threadCount == 0) {
             partedArraySize = array.length / threadCount;

@@ -1,6 +1,6 @@
-package otus.DbService;
+package ru.otus.DbService;
 
-import otus.DataSets.DataSet;
+import ru.otus.DataSets.DataSet;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.SQLException;

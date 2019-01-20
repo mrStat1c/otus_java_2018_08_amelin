@@ -1,4 +1,4 @@
-package otus;
+package ru.otus;
 
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;

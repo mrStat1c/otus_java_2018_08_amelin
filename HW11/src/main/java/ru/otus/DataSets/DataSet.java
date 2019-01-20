@@ -1,4 +1,4 @@
-package otus.DataSets;
+package ru.otus.DataSets;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

@@ -1,9 +1,9 @@
-package otus.DbService;
+package ru.otus.DbService;
 
-import otus.DataSetQueryBuilder;
-import otus.DataSets.DataSet;
-import otus.DbQueries;
-import otus.ReflectionHelper;
+import ru.otus.DataSetQueryBuilder;
+import ru.otus.DataSets.DataSet;
+import ru.otus.DbQueries;
+import ru.otus.ReflectionHelper;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;

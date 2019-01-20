@@ -1,6 +1,6 @@
-package otus;
+package ru.otus;
 
-import otus.DataSets.DataSet;
+import ru.otus.DataSets.DataSet;
 
 import java.lang.reflect.Field;
 import java.sql.Statement;

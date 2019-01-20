@@ -1,4 +1,4 @@
-package otus.DbService;
+package ru.otus.DbService;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -6,9 +6,9 @@ import org.hibernate.Transaction;
 import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.service.ServiceRegistry;
-import otus.DAO.UserDataSetDAO;
-import otus.DataSets.DataSet;
-import otus.DataSets.UserDataSet;
+import ru.otus.DAO.UserDataSetDAO;
+import ru.otus.DataSets.DataSet;
+import ru.otus.DataSets.UserDataSet;
 
 import java.util.function.Function;
 

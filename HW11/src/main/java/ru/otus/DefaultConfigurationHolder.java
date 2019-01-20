@@ -1,9 +1,9 @@
-package otus;
+package ru.otus;
 
 import org.hibernate.cfg.Configuration;
-import otus.DataSets.AddressDataSet;
-import otus.DataSets.PhoneDataSet;
-import otus.DataSets.UserDataSet;
+import ru.otus.DataSets.AddressDataSet;
+import ru.otus.DataSets.PhoneDataSet;
+import ru.otus.DataSets.UserDataSet;
 
 public class DefaultConfigurationHolder {
 

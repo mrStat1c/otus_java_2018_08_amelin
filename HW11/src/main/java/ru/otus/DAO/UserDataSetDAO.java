@@ -1,7 +1,7 @@
-package otus.DAO;
+package ru.otus.DAO;
 
 import org.hibernate.Session;
-import otus.DataSets.UserDataSet;
+import ru.otus.DataSets.UserDataSet;
 
 public class UserDataSetDAO {
 

@@ -1,4 +1,4 @@
-package otus;
+package ru.otus;
 
 import java.lang.reflect.Field;
 import java.util.*;

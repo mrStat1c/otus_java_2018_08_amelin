@@ -1,0 +1,1 @@
+copy C:\IdeaProjects\javatrainingproject\HW14\target\HW14-1.0.war C:\jetty\webapps\root.war

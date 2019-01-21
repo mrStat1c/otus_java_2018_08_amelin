@@ -1,11 +1,13 @@
 package ru.otus;
 
 import org.hibernate.LazyInitializationException;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ru.otus.DataSets.UserDataSet;
 import ru.otus.DbService.DbService;
-import ru.otus.DbService.DbServiceImpl;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -13,6 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@Configurable
 public class UserServlet extends HttpServlet {
 
     private final static String PARAMETER_NAME = "name";
@@ -20,14 +23,23 @@ public class UserServlet extends HttpServlet {
     private final static String PARAMETER_REQUEST_TYPE = "requestType";
     private final static String PARAMETER_ID = "id";
     private final static String ADMIN_PAGE_NAME = "admin.html";
+
+    @Autowired
     private DbService dbService;
 
     private TemplateProcessor templateProcessor = new TemplateProcessor();
     private Map<String, String[]> requestParameters = new HashMap<>();
 
     public UserServlet() {
-        this.dbService = new ClassPathXmlApplicationContext("springBeans.xml")
-                .getBean("dbService", DbServiceImpl.class);
+//        this.dbService = new ClassPathXmlApplicationContext("applicationContext.xml")
+//                .getBean("dbService", DbServiceImpl.class);
+//        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
+    }
+
+    @Override
+    public void init() throws ServletException {
+        super.init();
+        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     public void doPost(HttpServletRequest request,

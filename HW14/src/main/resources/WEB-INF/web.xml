@@ -4,6 +4,10 @@
 
     <display-name>L14.0</display-name>
 
+    <listener>
+        <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+    </listener>
+
     <servlet>
         <servlet-name>userServlet</servlet-name>
         <servlet-class>ru.otus.UserServlet</servlet-class>

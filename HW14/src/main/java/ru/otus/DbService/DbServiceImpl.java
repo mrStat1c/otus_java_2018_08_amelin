@@ -13,6 +13,7 @@ import ru.otus.DataSets.UserDataSet;
 import java.util.function.Function;
 
 @Component
+//@Component("dbService")
 public class DbServiceImpl implements DbService {
 
     private final SessionFactory sessionFactory;

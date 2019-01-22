@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ru.otus.DataSets.UserDataSet;
 import ru.otus.DbService.DbService;
+import ru.otus.DbService.DbServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;

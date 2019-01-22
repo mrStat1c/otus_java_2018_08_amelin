@@ -8,10 +8,21 @@
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
+
     <servlet>
         <servlet-name>userServlet</servlet-name>
         <servlet-class>ru.otus.UserServlet</servlet-class>
+        <init-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/springContext.xml</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
     </servlet>
+
+    <context-param>
+        <param-name>contextConfigLocation</param-name>
+        <param-value>/WEB-INF/springContext*.xml</param-value>
+    </context-param>
 
     <servlet-mapping>
         <servlet-name>userServlet</servlet-name>

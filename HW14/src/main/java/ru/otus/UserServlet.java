@@ -3,6 +3,7 @@ package ru.otus;
 import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ru.otus.DataSets.UserDataSet;
 import ru.otus.DbService.DbService;
@@ -25,6 +26,7 @@ public class UserServlet extends HttpServlet {
     private final static String ADMIN_PAGE_NAME = "admin.html";
 
     @Autowired
+//    @Qualifier("dbService")
     private DbService dbService;
 
     private TemplateProcessor templateProcessor = new TemplateProcessor();

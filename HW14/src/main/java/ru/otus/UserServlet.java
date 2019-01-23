@@ -3,11 +3,9 @@ package ru.otus;
 import org.hibernate.LazyInitializationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
 import ru.otus.DataSets.UserDataSet;
 import ru.otus.DbService.DbService;
-import ru.otus.DbService.DbServiceImpl;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -27,16 +25,14 @@ public class UserServlet extends HttpServlet {
     private final static String ADMIN_PAGE_NAME = "admin.html";
 
     @Autowired
-//    @Qualifier("dbService")
     private DbService dbService;
 
-    private TemplateProcessor templateProcessor = new TemplateProcessor();
+    @Autowired
+    private TemplateProcessor templateProcessor;
+
     private Map<String, String[]> requestParameters = new HashMap<>();
 
     public UserServlet() {
-//        this.dbService = new ClassPathXmlApplicationContext("applicationContext.xml")
-//                .getBean("dbService", DbServiceImpl.class);
-//        SpringBeanAutowiringSupport.processInjectionBasedOnCurrentContext(this);
     }
 
     @Override

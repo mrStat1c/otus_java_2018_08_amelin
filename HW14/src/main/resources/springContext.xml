@@ -22,4 +22,7 @@
         <constructor-arg name="configuration" ref="hibernateConfiguration" />
     </bean>
 
+    <bean id="templateProcessor" class="ru.otus.TemplateProcessor">
+    </bean>
+
 </beans>

@@ -1,0 +1,65 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Jetty WebSocket: Chat</title>
+    <script src="js/wschat.js" type="text/javascript"></script>
+    <script>
+
+        onWebSocketMessage = function(event) {
+            processResponse(event.data)
+        }
+
+        initWebSocketRelative("wsUser");
+
+        function processResponse(responseText) {
+            var log =  document.getElementById("respView");
+            var insertPoint = document.getElementById("respCursor");
+
+            var newMsg = document.createElement( "p" );
+            newMsg.appendChild( document.createTextNode( responseText ) );
+            log.insertBefore(newMsg, insertPoint);
+
+            function parseUser() {
+                userObj = JSON.parse(responseText.substring(5));
+                var form = document.getElementById("editUserForm");
+                form.userId.value = userObj.id;
+                form.userName.value = userObj.name;
+                form.userAddress.value = userObj.address;
+            }
+
+            if (responseText.substring(0, 5) == "USER:") parseUser();
+        }
+
+        function updateUser(form) {
+            var queryObj = {
+                id: form.userId.value,
+                name: form.userName.value,
+                address: form.userAddress.value
+            };
+            var msg = "UPDATE:" + JSON.stringify(queryObj);
+            sendWebSocketMessage(msg);
+        }
+
+        function loadById(form) {
+            var form = document.getElementById("editUserForm");
+            var queryObj = {
+                id: form.userId.value
+            };
+            var msg = "READ:" + JSON.stringify(queryObj);
+            sendWebSocketMessage(msg);
+        }
+
+    </script>
+</head>
+<form id="editUserForm" name="addUser" action="" onsubmit="updateUser(this); return false">
+    <input type="number" name="userId"/><br/>
+    <input type="text" name="userName"/><br/>
+    <input type="text" name="userAddress"/><br/>
+    <input type="button" value="Загрузить по ID" onclick="loadById()"/>
+    <input type="submit" value="Сохранить"/><br/>
+</form>
+<div id="respView">
+    <span id="respCursor"/>
+</div>
+</body>
+</html>

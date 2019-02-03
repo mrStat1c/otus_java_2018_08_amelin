@@ -21,7 +21,6 @@ public class UserDataSet extends DataSet {
 
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
-//            fetch = FetchType.EAGER,
             orphanRemoval = true)
     private List<PhoneDataSet> phones = new ArrayList<>();
 

@@ -2,7 +2,6 @@ package ru.otus.frontend.servlet;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.context.support.SpringBeanAutowiringSupport;
-import ru.otus.db.cache.CacheEngine;
 import ru.otus.frontend.LoadingEmulator;
 
 import javax.servlet.ServletConfig;
@@ -23,9 +22,6 @@ public class AdminServlet extends HttpServlet {
     @Autowired
     private TemplateProcessor templateProcessor;
 
-//    @Autowired
-//    private CacheEngine cacheEngine;
-
     @Autowired
     private LoadingEmulator loadingEmulator;
     // инжектируется для того, чтобы объект эмулятора был создан и автоматически при этом запустился
@@ -33,16 +29,6 @@ public class AdminServlet extends HttpServlet {
     public AdminServlet() {
     }
 
-    @SuppressWarnings("WeakerAccess")
-    public AdminServlet(CacheEngine cacheEngine, TemplateProcessor templateProcessor) {
-//        this.cacheEngine = cacheEngine;
-        this.templateProcessor = templateProcessor;
-    }
-
-    @SuppressWarnings("WeakerAccess")
-    public AdminServlet(CacheEngine cacheEngine) {
-        this(cacheEngine, new TemplateProcessor());
-    }
 
     @Override
     public void init(ServletConfig config) throws ServletException {
@@ -57,10 +43,7 @@ public class AdminServlet extends HttpServlet {
         pageVariables.put("locale", request.getLocale());
         pageVariables.put("sessionId", request.getSession().getId());
         pageVariables.put("parameters", request.getParameterMap().toString());
-//        pageVariables.put("CacheHitCount", cacheEngine.getHitCount());
-//        pageVariables.put("CacheMissCount", cacheEngine.getMissCount());
 
-        //let's get login from session
         String login = (String) request.getSession().getAttribute(LoginServlet.LOGIN_PARAMETER_NAME);
         pageVariables.put("login", login != null ? login : DEFAULT_USER_NAME);
         pageVariables.put("loginOk", login != null);

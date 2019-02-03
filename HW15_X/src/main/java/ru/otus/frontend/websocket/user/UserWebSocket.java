@@ -27,37 +27,13 @@ public class UserWebSocket {
     }
 
     private String sendToDb(String data) {
-//        int delimiterPosition = data.indexOf(':');
-//
-//        String command = delimiterPosition >= 0 ?
-//                data.substring(0, delimiterPosition) : data;
-//        String tail = delimiterPosition >= 0 ?
-//                data.substring(delimiterPosition + 1) : "";
-//
-//        switch (command) {
-//            case "ADD": {
-//                addUser(tail);
-//                break;
-//            }
-//            case "UPDATE": {
-//                updateUser(tail);
-//                break;
-//            }
-//            case "READ": {
-//                readUser(tail);
-//                break;
-//            }
-//            default: {return "REJECTED";}
-//        }
         readUser(data);
         return "ACCEPTED";
     }
 
     private void readUser(String jsonStr) {
-//        UserID userID = new Gson().fromJson(jsonStr, UserID.class);
         Long userID = Long.parseLong(jsonStr);
         try {
-//            frontendService.getUserById(userID.id, this::sendUserDatasetToClient, this::handleErrorMessage);
             frontendService.getUserById(userID, this::sendUserDatasetToClient, this::handleErrorMessage);
         } catch (Exception e) {
             thereWasError(e);
@@ -65,17 +41,12 @@ public class UserWebSocket {
         }
     }
 
-    private class UserID {
-        Long id;
-    }
 
     private void updateUser(String jsonStr) {
         UserDataSet userDataSet = GsonHelper.userFromJson(jsonStr);
         try {
             frontendService.update(userDataSet, this::sendUserDatasetToClient, this::handleErrorMessage);
         } catch (Exception e) {
-            // В реальности ошибка при сохранении сюда не попадёт, т.к. текущая реализация не предусматривает
-            // возврат информации об ошибке через систему сообщений
             thereWasError(e);
             return;
         }
@@ -100,12 +71,10 @@ public class UserWebSocket {
     }
 
     private void sendUserDatasetToClient(UserDataSet userDataSet) {
-        String response = null;
+        String response;
         try {
             response = "USER:" + GsonHelper.toJson(userDataSet);
         } catch (Exception e) {
-            // usrDataset загружается из БД лениво, поэтому ошибка ловится здесь
-            // (в момент обращения к полям)
             thereWasError(e);
             return;
         }

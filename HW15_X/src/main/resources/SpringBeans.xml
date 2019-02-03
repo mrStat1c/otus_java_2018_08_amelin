@@ -3,19 +3,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
 	http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
 
-    <bean id="cacheEngine" class="ru.otus.db.beans.CacheEngineBean">
-        <constructor-arg name="lifeTimeMs" value="1000"/>
-        <constructor-arg name="idleTimeMs" value="0"/>
-        <constructor-arg name="maxElements" value="1000"/>
-        <constructor-arg name="isEternal" value="false"/>
-    </bean>
-
     <bean id="dbServiceBase" class="ru.otus.db.hibernateStorage.DbServiceHibernateImpl"/>
-
-    <!--<bean id="dbServiceCached" class="ru.otus.db.cachedstorage.DbServiceCached">-->
-        <!--<constructor-arg name="decoratedService" ref="dbServiceBase"/>-->
-        <!--<constructor-arg name="cache" ref="cacheEngine"/>-->
-    <!--</bean>-->
 
     <bean id="loadingEmulator" class="ru.otus.frontend.LoadingEmulator">
         <constructor-arg name="dbService" ref="dbServiceBase"/>

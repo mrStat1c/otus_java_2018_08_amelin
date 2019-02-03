@@ -20,11 +20,12 @@
             log.insertBefore(newMsg, insertPoint);
 
             function parseUser() {
-                userObj = JSON.parse(responseText.substring(5));
+                <!--userObj = JSON.parse(responseText.substring(5));-->
+                userObj = JSON.parse(responseText);
                 var form = document.getElementById("editUserForm");
-                form.userId.value = userObj.id;
+                <!--form.userId.value = userObj.id;-->
                 form.userName.value = userObj.name;
-                form.userAddress.value = userObj.address;
+                <!--form.userAddress.value = userObj.address;-->
             }
 
             if (responseText.substring(0, 5) == "USER:") parseUser();
@@ -42,21 +43,24 @@
 
         function loadById(form) {
             var form = document.getElementById("editUserForm");
-            var queryObj = {
-                id: form.userId.value
-            };
-            var msg = "READ:" + JSON.stringify(queryObj);
+
+            <!--var queryObj = {-->
+                <!--id: form.userId.value-->
+            <!--};-->
+            <!--var msg = "READ:" + JSON.stringify(queryObj);-->
+
+            var msg = form.userId.value;
             sendWebSocketMessage(msg);
         }
 
     </script>
 </head>
 <form id="editUserForm" name="addUser" action="" onsubmit="updateUser(this); return false">
-    <input type="number" name="userId"/><br/>
-    <input type="text" name="userName"/><br/>
-    <input type="text" name="userAddress"/><br/>
+    User id: <input type="number" name="userId"/><br/>
+    <!--<input type="text" name="userName"/><br/>-->
+    <!--<input type="text" name="userAddress"/><br/>-->
     <input type="button" value="Загрузить по ID" onclick="loadById()"/>
-    <input type="submit" value="Сохранить"/><br/>
+    <!--<input type="submit" value="Сохранить"/><br/>-->
 </form>
 <div id="respView">
     <span id="respCursor"/>

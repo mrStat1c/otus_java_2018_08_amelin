@@ -16,47 +16,63 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public class DbServiceImpl implements DBService {
+public class DbServiceHibernateImpl implements DBService {
     private final SessionFactory sessionFactory;
 
-    public DbServiceImpl() {
+    public DbServiceHibernateImpl() {
         
         Configuration configuration = new Configuration();
+
+
+        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/hw10" +
+            "?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC");
+        configuration.setProperty("hibernate.connection.username", "root");
+        configuration.setProperty("hibernate.connection.password", "root");
+        configuration.setProperty("hibernate.show_sql", "false");
+        configuration.setProperty("hibernate.hbm2ddl.auto", "update");
+        configuration.setProperty("hibernate.connection.useSSL", "false");
+        configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
 
         configuration.addAnnotatedClass(UserDataSet.class);
         configuration.addAnnotatedClass(PhoneDataSet.class);
         configuration.addAnnotatedClass(AddressDataSet.class);
 
+//        configuration.addAnnotatedClass(UserDataSet.class);
+//        configuration.addAnnotatedClass(PhoneDataSet.class);
+//        configuration.addAnnotatedClass(AddressDataSet.class);
+
 //        setMySqlHibernateProperties(configuration);
-        setH2HibernateProperties(configuration);
+//        setH2HibernateProperties(configuration);
 
         sessionFactory = createSessionFactory(configuration);
     }
 
-    private void setCommonHibernateProperties(Configuration configuration) {
-        configuration.setProperty("hibernate.show_sql", "true");
-        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
-        configuration.setProperty("hibernate.connection.useSSL", "false");
-        configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
-    }
+//    private void setCommonHibernateProperties(Configuration configuration) {
+//        configuration.setProperty("hibernate.show_sql", "true");
+//        configuration.setProperty("hibernate.hbm2ddl.auto", "create");
+//        configuration.setProperty("hibernate.connection.useSSL", "false");
+//        configuration.setProperty("hibernate.enable_lazy_load_no_trans", "true");
+//    }
+//
+//    private void setMySqlHibernateProperties(Configuration configuration) {
+//        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
+//        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
+//        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/danik_ik");
+//        configuration.setProperty("hibernate.connection.username", "tully");
+//        configuration.setProperty("hibernate.connection.password", "tully");
+//        setCommonHibernateProperties(configuration);
+//    }
+//
+//    private void setH2HibernateProperties(Configuration configuration) {
+//        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
+//        configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
+//        configuration.setProperty("hibernate.connection.url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+//        setCommonHibernateProperties(configuration);
+//    }
 
-    private void setMySqlHibernateProperties(Configuration configuration) {
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.MySQL5Dialect");
-        configuration.setProperty("hibernate.connection.driver_class", "com.mysql.cj.jdbc.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:mysql://localhost:3306/danik_ik");
-        configuration.setProperty("hibernate.connection.username", "tully");
-        configuration.setProperty("hibernate.connection.password", "tully");
-        setCommonHibernateProperties(configuration);
-    }
-
-    private void setH2HibernateProperties(Configuration configuration) {
-        configuration.setProperty("hibernate.dialect", "org.hibernate.dialect.H2Dialect");
-        configuration.setProperty("hibernate.connection.driver_class", "org.h2.Driver");
-        configuration.setProperty("hibernate.connection.url", "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
-        setCommonHibernateProperties(configuration);
-    }
-
-    public DbServiceImpl(SessionFactory sessionFactory) {
+    public DbServiceHibernateImpl(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
     }
 

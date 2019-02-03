@@ -2,8 +2,7 @@
 
 <web-app>
 
-    <display-name>Homework13</display-name>
-    <description>Example of war file</description>
+    <display-name>L15.0</display-name>
 
     <!-- HW13 path to Spring cfg -->
     <context-param>

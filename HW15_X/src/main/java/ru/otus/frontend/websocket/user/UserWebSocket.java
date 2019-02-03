@@ -27,35 +27,38 @@ public class UserWebSocket {
     }
 
     private String sendToDb(String data) {
-        int delimiterPosition = data.indexOf(':');
-
-        String command = delimiterPosition >= 0 ?
-                data.substring(0, delimiterPosition) : data;
-        String tail = delimiterPosition >= 0 ?
-                data.substring(delimiterPosition + 1) : "";
-
-        switch (command) {
-            case "ADD": {
-                addUser(tail);
-                break;
-            }
-            case "UPDATE": {
-                updateUser(tail);
-                break;
-            }
-            case "READ": {
-                readUser(tail);
-                break;
-            }
-            default: {return "REJECTED";}
-        }
+//        int delimiterPosition = data.indexOf(':');
+//
+//        String command = delimiterPosition >= 0 ?
+//                data.substring(0, delimiterPosition) : data;
+//        String tail = delimiterPosition >= 0 ?
+//                data.substring(delimiterPosition + 1) : "";
+//
+//        switch (command) {
+//            case "ADD": {
+//                addUser(tail);
+//                break;
+//            }
+//            case "UPDATE": {
+//                updateUser(tail);
+//                break;
+//            }
+//            case "READ": {
+//                readUser(tail);
+//                break;
+//            }
+//            default: {return "REJECTED";}
+//        }
+        readUser(data);
         return "ACCEPTED";
     }
 
     private void readUser(String jsonStr) {
-        UserID userID = new Gson().fromJson(jsonStr, UserID.class);
+//        UserID userID = new Gson().fromJson(jsonStr, UserID.class);
+        Long userID = Long.parseLong(jsonStr);
         try {
-            frontendService.getUserById(userID.id, this::sendUserDatasetToClient, this::handleErrorMessage);
+//            frontendService.getUserById(userID.id, this::sendUserDatasetToClient, this::handleErrorMessage);
+            frontendService.getUserById(userID, this::sendUserDatasetToClient, this::handleErrorMessage);
         } catch (Exception e) {
             thereWasError(e);
             return;

@@ -14,32 +14,33 @@ public class LoadingEmulator {
 
     public LoadingEmulator(DBService dbService) {
         this.dbService = dbService;
-        runAsThread();
-    }
-
-    public void runAsThread() {
-        new Thread(this::run).start();
-    }
-
-    private void run() {
+//        runAsThread();
         createData();
-        while (!Thread.currentThread().isInterrupted()) {
-            dbService.read(getRandomIndex());
-            sleep(PAUSE);
-        }
     }
 
-    private long getRandomIndex() {
-        return ThreadLocalRandom.current().nextLong(0, MAX_INDEX + 1);
-    }
-
-    private void sleep(int pause) {
-        try {
-            Thread.sleep(pause);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-    }
+//    public void runAsThread() {
+//        new Thread(this::run).start();
+//    }
+//
+//    private void run() {
+//        createData();
+//        while (!Thread.currentThread().isInterrupted()) {
+//            dbService.read(getRandomIndex());
+//            sleep(PAUSE);
+//        }
+//    }
+//
+//    private long getRandomIndex() {
+//        return ThreadLocalRandom.current().nextLong(0, MAX_INDEX + 1);
+//    }
+//
+//    private void sleep(int pause) {
+//        try {
+//            Thread.sleep(pause);
+//        } catch (InterruptedException e) {
+//            Thread.currentThread().interrupt();
+//        }
+//    }
 
     private void createData() {
         for (int i = 0; i <= MAX_INDEX; i++) {

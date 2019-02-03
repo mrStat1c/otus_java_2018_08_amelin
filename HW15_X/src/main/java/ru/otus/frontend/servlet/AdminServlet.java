@@ -14,9 +14,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by tully.
- */
+
 public class AdminServlet extends HttpServlet {
 
     private static final String DEFAULT_USER_NAME = "UNKNOWN";
@@ -25,8 +23,8 @@ public class AdminServlet extends HttpServlet {
     @Autowired
     private TemplateProcessor templateProcessor;
 
-    @Autowired
-    private CacheEngine cacheEngine;
+//    @Autowired
+//    private CacheEngine cacheEngine;
 
     @Autowired
     private LoadingEmulator loadingEmulator;
@@ -37,7 +35,7 @@ public class AdminServlet extends HttpServlet {
 
     @SuppressWarnings("WeakerAccess")
     public AdminServlet(CacheEngine cacheEngine, TemplateProcessor templateProcessor) {
-        this.cacheEngine = cacheEngine;
+//        this.cacheEngine = cacheEngine;
         this.templateProcessor = templateProcessor;
     }
 
@@ -59,8 +57,8 @@ public class AdminServlet extends HttpServlet {
         pageVariables.put("locale", request.getLocale());
         pageVariables.put("sessionId", request.getSession().getId());
         pageVariables.put("parameters", request.getParameterMap().toString());
-        pageVariables.put("CacheHitCount", cacheEngine.getHitCount());
-        pageVariables.put("CacheMissCount", cacheEngine.getMissCount());
+//        pageVariables.put("CacheHitCount", cacheEngine.getHitCount());
+//        pageVariables.put("CacheMissCount", cacheEngine.getMissCount());
 
         //let's get login from session
         String login = (String) request.getSession().getAttribute(LoginServlet.LOGIN_PARAMETER_NAME);

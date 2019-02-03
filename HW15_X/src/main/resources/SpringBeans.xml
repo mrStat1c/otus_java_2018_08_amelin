@@ -10,15 +10,15 @@
         <constructor-arg name="isEternal" value="false"/>
     </bean>
 
-    <bean id="dbServiceBase" class="ru.otus.db.hibernateStorage.DbServiceImpl"/>
+    <bean id="dbServiceBase" class="ru.otus.db.hibernateStorage.DbServiceHibernateImpl"/>
 
-    <bean id="dbServiceCached" class="ru.otus.db.cachedstorage.DbServiceCached">
-        <constructor-arg name="decoratedService" ref="dbServiceBase"/>
-        <constructor-arg name="cache" ref="cacheEngine"/>
-    </bean>
+    <!--<bean id="dbServiceCached" class="ru.otus.db.cachedstorage.DbServiceCached">-->
+        <!--<constructor-arg name="decoratedService" ref="dbServiceBase"/>-->
+        <!--<constructor-arg name="cache" ref="cacheEngine"/>-->
+    <!--</bean>-->
 
     <bean id="loadingEmulator" class="ru.otus.frontend.LoadingEmulator">
-        <constructor-arg name="dbService" ref="dbServiceCached"/>
+        <constructor-arg name="dbService" ref="dbServiceBase"/>
     </bean>
 
     <bean id="templateProcessor" class="ru.otus.frontend.servlet.TemplateProcessor"/>
@@ -37,6 +37,6 @@
     <bean id="DbService" class="ru.otus.db.DbServiceImpl" init-method="init">
         <constructor-arg name="address" value="DbService"/>
         <constructor-arg name="context" ref="messageSystemContext"/>
-        <constructor-arg name="dbService" ref="dbServiceCached"/>
+        <constructor-arg name="dbService" ref="dbServiceBase"/>
     </bean>
 </beans>

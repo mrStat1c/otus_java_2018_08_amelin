@@ -1,5 +1,5 @@
 var ws;
-// Переопределить необходимые функции до инициализации веб-сокета!
+
 var onWebSocketOpen = function (event) {};
 var onWebSocketMessage = function (event) {};
 var onWebSocketClose = function (event) {};

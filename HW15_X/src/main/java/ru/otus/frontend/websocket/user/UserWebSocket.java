@@ -42,32 +42,12 @@ public class UserWebSocket {
     }
 
 
-    private void updateUser(String jsonStr) {
-        UserDataSet userDataSet = GsonHelper.userFromJson(jsonStr);
-        try {
-            frontendService.update(userDataSet, this::sendUserDatasetToClient, this::handleErrorMessage);
-        } catch (Exception e) {
-            thereWasError(e);
-            return;
-        }
-    }
-
     private void thereWasError(Exception e) {
         sendToClient("ERROR");
     }
 
     private void handleErrorMessage(String errorMessage) {
         sendToClient("ERROR:" + new Gson().toJson(errorMessage));
-    }
-
-    private void addUser(String jsonStr) {
-        UserDataSet userDataSet = GsonHelper.userFromJson(jsonStr);
-        try {
-            frontendService.addUser(userDataSet, this::sendUserDatasetToClient, this::handleErrorMessage);
-        } catch (Exception e) {
-            thereWasError(e);
-            return;
-        }
     }
 
     private void sendUserDatasetToClient(UserDataSet userDataSet) {

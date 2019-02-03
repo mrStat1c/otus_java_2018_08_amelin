@@ -2,9 +2,7 @@ package ru.otus.frontend;
 
 import ru.otus.client.FrontendService;
 import ru.otus.client.MessageSystemContext;
-import ru.otus.client.messages.MsgAddUser;
 import ru.otus.client.messages.MsgGetUserById;
-import ru.otus.client.messages.MsgUpdateUser;
 import ru.otus.db.storage.dataSets.UserDataSet;
 import ru.otus.messageSystem.Address;
 import ru.otus.messageSystem.MessageSystem;
@@ -14,12 +12,6 @@ import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicLong;
 import java.util.function.Consumer;
 
-/**
- * Класс служит мостом между системой сообщений и клиентом, возвращая объект Future,
- * который завершается при получении ответного сообщения.
- * Ограничения: нет системы таймаутов, соответственно, не предотвращается утечка
- * памяти при отсутствии ответа на запрос в разумный срок
- */
 public class FrontendServiceImpl implements FrontendService {
     private final Address address;
 
@@ -73,24 +65,6 @@ public class FrontendServiceImpl implements FrontendService {
         getMS().sendMessage(msgRequest);
     }
 
-    @Override
-    public void addUser(UserDataSet user, Consumer<UserDataSet> onComplete, Consumer<String> onError) {
-        long requestId = nextID.getAndIncrement();
-        CompletableFuture<UserDataSet> future = new CompletableFuture<>();
-        callbacks.put(requestId, new ResponseHandlers(onComplete, onError));
-
-        MsgAddUser msgRequest = new MsgAddUser(address, context.getDbAddress(), requestId, user);
-        getMS().sendMessage(msgRequest);
-    }
-
-    @Override
-    public void update(UserDataSet user, Consumer<UserDataSet> onComplete, Consumer<String> onError) {
-        long requestId = nextID.getAndIncrement();
-        callbacks.put(requestId, new ResponseHandlers(onComplete, onError));
-
-        MsgUpdateUser msgRequest = new MsgUpdateUser(address, context.getDbAddress(), requestId, user);
-        getMS().sendMessage(msgRequest);
-    }
 
     private class ResponseHandlers {
         public final Consumer responseHandler;

@@ -9,8 +9,6 @@
         <constructor-arg name="dbService" ref="dbServiceBase"/>
     </bean>
 
-    <bean id="templateProcessor" class="ru.otus.frontend.servlet.TemplateProcessor"/>
-
     <bean id="MessageSystem" class="ru.otus.messageSystem.MessageSystem" destroy-method="dispose"/>
 
     <bean id="messageSystemContext" class="ru.otus.client.MessageSystemContext" autowire="byName">

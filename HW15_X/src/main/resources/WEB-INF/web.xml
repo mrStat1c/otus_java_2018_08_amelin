@@ -4,41 +4,19 @@
 
     <display-name>L15.0</display-name>
 
-    <!-- HW13 path to Spring cfg -->
     <context-param>
         <param-name>contextConfigLocation</param-name>
         <param-value>classpath:SpringBeans.xml</param-value>
     </context-param>
 
-    <!-- HW13 Spring context load listener -->
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
     </listener>
 
     <servlet>
-        <servlet-name>adminServlet</servlet-name>
-        <servlet-class>ru.otus.frontend.servlet.AdminServlet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>loginServlet</servlet-name>
-        <servlet-class>ru.otus.frontend.servlet.LoginServlet</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>userWsServlet</servlet-name>
         <servlet-class>ru.otus.frontend.websocket.user.UserServlet</servlet-class>
     </servlet>
-
-    <servlet-mapping>
-        <servlet-name>loginServlet</servlet-name>
-        <url-pattern>/login</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>adminServlet</servlet-name>
-        <url-pattern>/admin</url-pattern>
-    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>userWsServlet</servlet-name>

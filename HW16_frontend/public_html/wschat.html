@@ -1,0 +1,47 @@
+<html>
+<head>
+    <meta charset="UTF-8"/>
+    <title>Jetty WebSocket: Chat</title>
+    <script src="js/wschat.js" type="text/javascript"></script>
+    <script>
+
+        onWebSocketMessage = function(event) {
+            processResponse(event.data)
+        }
+
+        initWebSocketRelative("wsUser");
+
+        function processResponse(responseText) {
+            var log =  document.getElementById("respView");
+            var insertPoint = document.getElementById("respCursor");
+
+            var newMsg = document.createElement( "p" );
+            newMsg.appendChild( document.createTextNode( responseText ) );
+            log.insertBefore(newMsg, insertPoint);
+
+            function parseUser() {
+                userObj = JSON.parse(responseText);
+                var form = document.getElementById("getUserForm");
+                form.userName.value = userObj.name;
+            }
+
+            if (responseText.substring(0, 5) == "USER:") parseUser();
+        }
+
+        function loadById(form) {
+            var form = document.getElementById("getUserForm");
+            var msg = form.userId.value;
+            sendWebSocketMessage(msg);
+        }
+
+    </script>
+</head>
+<form id="getUserForm" name="getUser" action="">
+    User id: <input type="number" name="userId"/><br/>
+    <input type="button" value="Загрузить по ID" onclick="loadById()"/>
+</form>
+<div id="respView">
+    <span id="respCursor"/>
+</div>
+</body>
+</html>

@@ -1,4 +1,4 @@
-ДЗ 11: Hibernate ORM
+ДЗ 11. Hibernate ORM
 
 На основе предыдущего ДЗ (myORM):
 1. Оформить решение в виде DBService (interface DBService, class DBServiceImpl, UsersDAO, UsersDataSet, Executor)

@@ -1,24 +1,27 @@
 var ws;
 
-init = function () {
-    ws = new WebSocket("ws://localhost:8090/chat");
-//    далее идут обработчики событий
-    ws.onopen = function (event) {
+var onWebSocketOpen = function (event) {};
+var onWebSocketMessage = function (event) {};
+var onWebSocketClose = function (event) {};
 
-    }
-    //если пришло сообщение с сервера..
-    ws.onmessage = function (event) {
-        var $textarea = document.getElementById("messages");
-        $textarea.value = $textarea.value + event.data + "\n";
-    }
-    ws.onclose = function (event) {
-
-    }
+initWebSocket = function (path) {
+    ws = new WebSocket(path);
+    ws.onopen = onWebSocketOpen;
+    ws.onmessage = onWebSocketMessage;
+    ws.onclose = onWebSocketClose;
 };
-//если мы захотели отправить сообщение (клиентская сторона)
-function sendMessage() {
-    var messageField = document.getElementById("message");
-    var message = messageField.value;
+
+initWebSocketRelative = function (appendix) {
+    initWebSocket(getWebSocketPath(appendix));
+}
+
+function sendWebSocketMessage(message) {
     ws.send(message);
-    messageField.value = '';
+}
+
+function getWebSocketPath(appendix) {
+    var host = window.location.host;
+    var pathArray = window.location.pathname.split( '/' );
+    pathArray.pop();
+    return "ws://" + host + pathArray.join("/") + "/" + appendix;
 }

@@ -1,4 +1,4 @@
-ДЗ 10: myORM
+ДЗ 10. myORM
 
 Создайте в базе таблицу с полями: 
 id bigint(20) NOT NULL auto_increment 
